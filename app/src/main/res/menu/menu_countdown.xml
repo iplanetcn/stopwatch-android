@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_rateapp"
+        android:title="@string/rateapp"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_settings"
+        android:title="@string/settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_resettime"
+        android:icon="@drawable/reset_time"
+        android:title="@string/reset_time"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_audiotoggle"
+        android:icon="@drawable/audio_on"
+        android:title="@string/audio_toggle"
+        app:showAsAction="ifRoom" />
+</menu>
