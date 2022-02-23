@@ -223,7 +223,7 @@ class CountdownFragment : Fragment() {
         if (mDialogOnScreen) {
             return
         }
-        val wrapper = ContextThemeWrapper(activity, android.R.style.Theme_Holo)
+        val wrapper = ContextThemeWrapper(activity, R.style.Theme_theme_usw)
         val inflater = wrapper.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val ll = inflater.inflate(R.layout.countdown_picker, null)
         val npHours = ll.findViewById<View>(R.id.numberPickerHours) as NumberPicker
@@ -240,7 +240,7 @@ class CountdownFragment : Fragment() {
         mSelectTime.setTitle(getString(R.string.timer_title))
         mSelectTime.setButton(
             AlertDialog.BUTTON_POSITIVE, getString(R.string.timer_start)
-        ) { dialog: DialogInterface?, which: Int ->
+        ) { _: DialogInterface?, _: Int ->
             mDialogOnScreen = false
             mHoursValue = npHours.value
             mMinsValue = npMins.value
@@ -250,10 +250,9 @@ class CountdownFragment : Fragment() {
                 mMinsValue, mSecsValue, true
             )
         }
-        mSelectTime.setButton(
-            AlertDialog.BUTTON_NEGATIVE, getString(R.string.timer_cancel)
-        ) { dialog: DialogInterface?, which: Int -> mDialogOnScreen = false }
-        mSelectTime.setOnCancelListener { dialogInterface: DialogInterface? ->
+        mSelectTime.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.timer_cancel)) { _, _ ->
+            mDialogOnScreen = false }
+        mSelectTime.setOnCancelListener {
             mDialogOnScreen = false
         }
         mSelectTime.show()

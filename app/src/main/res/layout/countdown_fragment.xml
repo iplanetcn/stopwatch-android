@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:id="@+id/countdown_layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/countdown_background"
     android:orientation="vertical">
 
@@ -35,10 +35,10 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/startButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_weight="1"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:contentDescription="@string/contentdesc_start_cd"
             android:fontFamily="sans-serif"
             android:text="@string/start"
@@ -47,13 +47,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/resetButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_weight="1"
             android:contentDescription="@string/contentdesc_reset"
             android:fontFamily="sans-serif"
             android:text="@string/reset"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:textColor="@drawable/blue_button_text_color"
             android:textSize="@dimen/bottom_bar_portrait_button_font_size" />
     </LinearLayout>

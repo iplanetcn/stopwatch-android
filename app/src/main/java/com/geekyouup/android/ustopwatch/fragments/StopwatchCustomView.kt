@@ -1,8 +1,10 @@
 package com.geekyouup.android.ustopwatch.fragments
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -14,8 +16,11 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import com.geekyouup.android.ustopwatch.*
+import com.geekyouup.android.ustopwatch.compat.compatVibrator
 import kotlin.math.abs
 
 class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
@@ -28,7 +33,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
     private var mAppOffsetY = 0
     private var mMinsAngle = 0f
     private var mSecsAngle = 0f
-    private var mDisplayTimeMillis:Double = 0.0 //max value is 100hours, 360000000ms
+    private var mDisplayTimeMillis: Int = 0//max value is 100hours, 360000000ms
     private val twoPI = (Math.PI * 2.0).toFloat()
     private val mStopwatchMode = true
     private var mTouching: Long = 0
@@ -47,15 +52,15 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
      * Used to figure out elapsed time between frames
      */
     private var mLastTime: Long = 0
-    private lateinit var mSecHand: Drawable
-    private lateinit var mMinHand: Drawable
+    private var mSecHand: Drawable? = null
+    private var mMinHand: Drawable? = null
 
     //pass back messages to UI thread
     private var mHandler: Handler? = null
     private fun init() {
         val res = resources
         //the stopwatch graphics are square, so find the smallest dimension they must fit in and load appropriately
-        val minDim = Math.min(mCanvasHeight, mCanvasWidth)
+        val minDim = mCanvasHeight.coerceAtMost(mCanvasWidth)
         val options = BitmapFactory.Options()
         options.inScaled = false
         val handsScaleFactor: Double
@@ -109,23 +114,32 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
             )
             handsScaleFactor = 0.208
         }
-        mSecHand = res.getDrawable(if (mIsStopwatch) R.drawable.sechand else R.drawable.sechand_cd)
-        mMinHand = res.getDrawable(if (mIsStopwatch) R.drawable.minhand else R.drawable.minhand_cd)
-        mSecsHalfWidth = mSecHand.intrinsicWidth / 2
-        mSecsHalfHeight = mSecHand.intrinsicHeight / 2
-        mMinsHalfWidth = mMinHand.intrinsicWidth / 2
-        mMinsHalfHeight = mMinHand.intrinsicHeight / 2
+
+        mSecHand = ResourcesCompat.getDrawable(
+            res,
+            if (mIsStopwatch) R.drawable.sechand else R.drawable.sechand_cd,
+            null
+        )
+        mMinHand = ResourcesCompat.getDrawable(
+            res,
+            if (mIsStopwatch) R.drawable.minhand else R.drawable.minhand_cd,
+            null
+        )
+        mSecsHalfWidth = mSecHand!!.intrinsicWidth / 2
+        mSecsHalfHeight = mSecHand!!.intrinsicHeight / 2
+        mMinsHalfWidth = mMinHand!!.intrinsicWidth / 2
+        mMinsHalfHeight = mMinHand!!.intrinsicHeight / 2
         mMinsHalfHeight = (mMinsHalfHeight.toDouble() * handsScaleFactor).toInt()
         mMinsHalfWidth = (mMinsHalfWidth.toDouble() * handsScaleFactor).toInt()
         mSecsHalfHeight = (mSecsHalfHeight.toDouble() * handsScaleFactor).toInt()
         mSecsHalfWidth = (mSecsHalfWidth.toDouble() * handsScaleFactor).toInt()
-        mBackgroundStartY = (mCanvasHeight - mBackgroundImage.getHeight()) / 2
-        mAppOffsetX = (mCanvasWidth - mBackgroundImage.getWidth()) / 2
+        mBackgroundStartY = (mCanvasHeight - mBackgroundImage.height) / 2
+        mAppOffsetX = (mCanvasWidth - mBackgroundImage.width) / 2
         if (mBackgroundStartY < 0) mAppOffsetY = -mBackgroundStartY
         mSecsCenterY =
-            mBackgroundStartY + mBackgroundImage.getHeight() / 2 //new graphics have watch center in center
+            mBackgroundStartY + mBackgroundImage.height / 2 //new graphics have watch center in center
         mMinsCenterY =
-            mBackgroundStartY + mBackgroundImage.getHeight() * 314 / 1000 //mSecsCenterY - 44;
+            mBackgroundStartY + mBackgroundImage.height * 314 / 1000 //mSecsCenterY - 44;
         mSecsCenterX = mCanvasWidth / 2
         mMinsCenterX = mCanvasWidth / 2
     }
@@ -142,42 +156,40 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         // Draw the background image
-        if (mBackgroundImage != null) canvas.drawBitmap(
-            mBackgroundImage!!,
+        canvas.drawBitmap(
+            mBackgroundImage,
             mAppOffsetX.toFloat(),
             (mBackgroundStartY + mAppOffsetY).toFloat(),
             null
         )
 
         // draw the mins hand with its current rotatiom
-        if (mMinHand != null && mSecHand != null) {
-            canvas.save()
-            canvas.rotate(
-                Math.toDegrees(mMinsAngle.toDouble()).toFloat(),
-                mMinsCenterX.toFloat(),
-                (mMinsCenterY + mAppOffsetY).toFloat()
-            )
-            mMinHand!!.setBounds(
-                mMinsCenterX - mMinsHalfWidth, mMinsCenterY - mMinsHalfHeight + mAppOffsetY,
-                mMinsCenterX + mMinsHalfWidth, mMinsCenterY + mAppOffsetY + mMinsHalfHeight
-            )
-            mMinHand!!.draw(canvas)
-            canvas.restore()
+        canvas.save()
+        canvas.rotate(
+            Math.toDegrees(mMinsAngle.toDouble()).toFloat(),
+            mMinsCenterX.toFloat(),
+            (mMinsCenterY + mAppOffsetY).toFloat()
+        )
+        mMinHand!!.setBounds(
+            mMinsCenterX - mMinsHalfWidth, mMinsCenterY - mMinsHalfHeight + mAppOffsetY,
+            mMinsCenterX + mMinsHalfWidth, mMinsCenterY + mAppOffsetY + mMinsHalfHeight
+        )
+        mMinHand!!.draw(canvas)
+        canvas.restore()
 
-            // Draw the secs hand with its current rotation
-            canvas.save()
-            canvas.rotate(
-                Math.toDegrees(mSecsAngle.toDouble()).toFloat(),
-                mSecsCenterX.toFloat(),
-                (mSecsCenterY + mAppOffsetY).toFloat()
-            )
-            mSecHand!!.setBounds(
-                mSecsCenterX - mSecsHalfWidth, mSecsCenterY - mSecsHalfHeight + mAppOffsetY,
-                mSecsCenterX + mSecsHalfWidth, mSecsCenterY + mAppOffsetY + mSecsHalfHeight
-            )
-            mSecHand!!.draw(canvas)
-            canvas.restore()
-        }
+        // Draw the secs hand with its current rotation
+        canvas.save()
+        canvas.rotate(
+            Math.toDegrees(mSecsAngle.toDouble()).toFloat(),
+            mSecsCenterX.toFloat(),
+            (mSecsCenterY + mAppOffsetY).toFloat()
+        )
+        mSecHand!!.setBounds(
+            mSecsCenterX - mSecsHalfWidth, mSecsCenterY - mSecsHalfHeight + mAppOffsetY,
+            mSecsCenterX + mSecsHalfWidth, mSecsCenterY + mAppOffsetY + mSecsHalfHeight
+        )
+        mSecHand!!.draw(canvas)
+        canvas.restore()
     }
 
     //set the time on the stopwatch/countdown face, animating the hands if resettings countdown
@@ -194,8 +206,8 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
                 mSecsAngle =
                     twoPI * (seconds.toFloat() / 60.0f) //ensure the hands have ended at correct position
                 mMinsAngle = twoPI * (minutes.toFloat() / 30.0f)
-                mDisplayTimeMillis = (hours * 3600000 + minutes * 60000 + seconds * 1000).toDouble()
-                broadcastClockTime(if (mIsStopwatch) mDisplayTimeMillis else - mDisplayTimeMillis)
+                mDisplayTimeMillis = (hours * 3600000 + minutes * 60000 + seconds * 1000)
+                broadcastClockTime(if (mIsStopwatch) mDisplayTimeMillis.toDouble() else -mDisplayTimeMillis.toDouble())
                 invalidate()
             }
         }
@@ -213,8 +225,10 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
             twoPI * ((if (minutes > 30) minutes - 30 else minutes) / 30f + seconds / 1800f),
             resetting
         )
-        val maxAngleChange = abs(mSecsAngle - toSecsAngle).coerceAtLeast(abs(toMinsAngle - mMinsAngle))
-        val duration: Int = if (maxAngleChange < Math.PI / 2) 300 else if (maxAngleChange < Math.PI) 750 else 1250
+        val maxAngleChange =
+            abs(mSecsAngle - toSecsAngle).coerceAtLeast(abs(toMinsAngle - mMinsAngle))
+        val duration: Int =
+            if (maxAngleChange < Math.PI / 2) 300 else if (maxAngleChange < Math.PI) 750 else 1250
         val secsAnimation = ValueAnimator.ofFloat(mSecsAngle, toSecsAngle)
         secsAnimation.interpolator = AccelerateDecelerateInterpolator()
         secsAnimation.duration = duration.toLong()
@@ -235,19 +249,18 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
         removeCallbacks(animator)
         post(object : Runnable {
             override fun run() {
-
                 //during the animation also roll back the clock time to the current hand times.
                 if (secsAnimation.isRunning || minsAnimation.isRunning || clockAnimation.isRunning) {
                     mSecsAngle = secsAnimation.animatedValue as Float
                     mMinsAngle = minsAnimation.animatedValue as Float
-                    broadcastClockTime((if (mIsStopwatch) (clockAnimation.animatedValue as Double) else (-1 * clockAnimation.animatedValue as Double)))
+                    broadcastClockTime((if (mIsStopwatch) (clockAnimation.animatedValue as Int).toDouble() else -(clockAnimation.animatedValue as Int).toDouble()))
                     invalidate()
                     postDelayed(this, 15)
                 } else {
                     mSecsAngle = toSecsAngle //ensure the hands have ended at correct position
                     mMinsAngle = toMinsAngle
-                    mDisplayTimeMillis = (hours * 3600000 + minutes * 60000 + seconds * 1000).toDouble()
-                    broadcastClockTime(if (mIsStopwatch) mDisplayTimeMillis else -mDisplayTimeMillis)
+                    mDisplayTimeMillis = (hours * 3600000 + minutes * 60000 + seconds * 1000)
+                    broadcastClockTime(if (mIsStopwatch) mDisplayTimeMillis.toDouble() else -mDisplayTimeMillis.toDouble())
                     invalidate()
                 }
             }
@@ -273,10 +286,10 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
             if (toAngle > fromAngle) toAngle else toAngle + twoPI
         } else  //not restting hands must take shortest route
         {
-            val absFromMinusTo = Math.abs(fromAngle - toAngle)
+            val absFromMinusTo = abs(fromAngle - toAngle)
             //toAngle-twoPi, toAngle, toAngle+twoPi
-            if (absFromMinusTo < Math.abs(fromAngle - (toAngle + twoPI))) {
-                if (Math.abs(fromAngle - (toAngle - twoPI)) < absFromMinusTo) {
+            if (absFromMinusTo < abs(fromAngle - (toAngle + twoPI))) {
+                if (abs(fromAngle - (toAngle - twoPI)) < absFromMinusTo) {
                     toAngle - twoPI
                 } else {
                     toAngle
@@ -311,10 +324,10 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
         // mins is 0 to 30
         mMinsAngle = twoPI * (mDisplayTimeMillis / 1800000.0f).toFloat()
         mSecsAngle = twoPI * (mDisplayTimeMillis / 60000.0f).toFloat()
-        if (mDisplayTimeMillis < 0) mDisplayTimeMillis = 0.0
+        if (mDisplayTimeMillis < 0) mDisplayTimeMillis = 0
 
         // send the time back to the Activity to update the other views
-        broadcastClockTime(if (mIsStopwatch) mDisplayTimeMillis else -mDisplayTimeMillis.toDouble())
+        broadcastClockTime(if (mIsStopwatch) mDisplayTimeMillis.toDouble() else -mDisplayTimeMillis.toDouble())
         mLastTime = now
 
         // stop timer at end
@@ -324,6 +337,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
     }
 
     // Deal with touch events, either start/stop or swipe
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
             val sm: SoundManager = SoundManager.getInstance(context)!!
@@ -346,7 +360,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
         if (isRunning) {
             stop()
             notifyStateChanged()
-        } else if (mIsStopwatch || mDisplayTimeMillis != 0.0) { // don't start the countdown if it is 0
+        } else if (mIsStopwatch || mDisplayTimeMillis != 0) { // don't start the countdown if it is 0
             start()
             notifyStateChanged()
         } else { //mDisplayTimeMillis == 0
@@ -362,8 +376,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
 
         //vibrate
         if (SettingsActivity.isVibrate) {
-            val v = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            v.vibrate(20)
+            context.compatVibrator().vibrate(20)
         }
         removeCallbacks(animator)
         post(animator)
@@ -374,8 +387,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
 
         //vibrate
         if (SettingsActivity.isVibrate) {
-            val v = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            v.vibrate(20)
+            context.compatVibrator().vibrate(20)
         }
         removeCallbacks(animator)
     }
@@ -421,7 +433,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
                 KEY_LASTTIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX,
                 System.currentTimeMillis()
             )
-            mDisplayTimeMillis = savedState.getInt(KEY_NOWTIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX, 0).toDouble()
+            mDisplayTimeMillis = savedState.getInt(KEY_NOWTIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX, 0)
             updateWatchState(true)
             removeCallbacks(animator)
             if (isRunning) post(animator)
@@ -442,28 +454,28 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
 
     private fun notifyStateChanged() {
         val b = Bundle()
-        b.putBoolean(UltimateStopwatchActivity.Companion.MSG_STATE_CHANGE, true)
+        b.putBoolean(UltimateStopwatchActivity.MSG_STATE_CHANGE, true)
         sendMessageToHandler(b)
     }
 
     private fun notifyIconHint() {
         val b = Bundle()
-        b.putBoolean(CountdownFragment.Companion.MSG_REQUEST_ICON_FLASH, true)
+        b.putBoolean(CountdownFragment.MSG_REQUEST_ICON_FLASH, true)
         sendMessageToHandler(b)
     }
 
     private fun notifyCountdownComplete(appResuming: Boolean) {
         val b = Bundle()
-        b.putBoolean(CountdownFragment.Companion.MSG_COUNTDOWN_COMPLETE, true)
-        b.putBoolean(CountdownFragment.Companion.MSG_APP_RESUMING, appResuming)
+        b.putBoolean(CountdownFragment.MSG_COUNTDOWN_COMPLETE, true)
+        b.putBoolean(CountdownFragment.MSG_APP_RESUMING, appResuming)
         sendMessageToHandler(b)
     }
 
     //send the latest time to the parent fragment to populate the digits
     private fun broadcastClockTime(mTime: Double) {
         val b = Bundle()
-        b.putBoolean(UltimateStopwatchActivity.Companion.MSG_UPDATE_COUNTER_TIME, true)
-        b.putDouble(UltimateStopwatchActivity.Companion.MSG_NEW_TIME_DOUBLE, mTime)
+        b.putBoolean(UltimateStopwatchActivity.MSG_UPDATE_COUNTER_TIME, true)
+        b.putDouble(UltimateStopwatchActivity.MSG_NEW_TIME_DOUBLE, mTime)
         sendMessageToHandler(b)
     }
 

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ultimatestopwatch.iml" filepath="$PROJECT_DIR$/.idea/modules/ultimatestopwatch.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ultimatestopwatch.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ultimatestopwatch.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ustopwatch.iml" filepath="$PROJECT_DIR$/.idea/modules/ustopwatch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ustopwatch.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ustopwatch.app.iml" />
     </modules>
   </component>
 </project>

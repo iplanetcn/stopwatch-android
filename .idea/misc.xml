@@ -18,6 +18,8 @@
         <entry key="app/src/main/res/drawable/spinner_background_ab_theme_usw.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/tab_indicator_ab_theme_usw.xml" value="0.1765" />
         <entry key="app/src/main/res/layout-land-v11/laptime_item.xml" value="0.20104166666666667" />
+        <entry key="app/src/main/res/layout-land/countdown_fragment.xml" value="0.22552083333333334" />
+        <entry key="app/src/main/res/layout-land/laptime_item.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/layout-land/main.xml" value="0.1" />
         <entry key="app/src/main/res/layout-v11/laptime_item.xml" value="0.2604166666666667" />
         <entry key="app/src/main/res/layout-v14/settings.xml" value="0.3541666666666667" />
@@ -27,6 +29,8 @@
         <entry key="app/src/main/res/layout/countdown.xml" value="0.2604166666666667" />
         <entry key="app/src/main/res/layout/countdown_fragment.xml" value="0.2604166666666667" />
         <entry key="app/src/main/res/layout/countdown_picker.xml" value="0.2604166666666667" />
+        <entry key="app/src/main/res/layout/laptime_item.xml" value="0.32395833333333335" />
+        <entry key="app/src/main/res/layout/laptimes_holder_list_item.xml" value="0.20052083333333334" />
         <entry key="app/src/main/res/layout/main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/settings.xml" value="0.3496724446614583" />
         <entry key="app/src/main/res/layout/stopwatch_fragment.xml" value="0.2604166666666667" />

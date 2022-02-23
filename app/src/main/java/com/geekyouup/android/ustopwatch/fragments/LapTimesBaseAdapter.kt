@@ -11,44 +11,43 @@ import com.geekyouup.android.ustopwatch.R
 import com.geekyouup.android.ustopwatch.TimeUtils
 
 class LapTimesBaseAdapter(
-    private val mContext: Context?,
-    private val mDataSet: ArrayList<LapTimeBlock?>?
+    private val mContext: Context,
+    private val mDataSet: ArrayList<LapTimeBlock>
 ) : BaseAdapter() {
-    private var mLayoutInflator: LayoutInflater? = null
+    private lateinit var mLayoutInflater: LayoutInflater
     override fun getCount(): Int {
-        return mDataSet?.size ?: 0
+        return mDataSet.size
     }
 
     override fun getItem(position: Int): LapTimeBlock? {
-        return mDataSet?.get(position)
+        return mDataSet[position]
     }
     override fun getItemId(position: Int): Long {
-        return 0
+        return position.toLong()
     }
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
-        if (mLayoutInflator == null) mLayoutInflator =
-            mContext!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        mLayoutInflater = LayoutInflater.from(mContext)
         var v = convertView
-        if (v == null) v = mLayoutInflator!!.inflate(R.layout.laptimes_holder_list_item, null)
-        val listItemHolder = v.findViewById<View>(R.id.laptimes_list_item_holder) as LinearLayout
+        if (v == null) v = mLayoutInflater.inflate(R.layout.laptimes_holder_list_item, null)
+        val listItemHolder = v?.findViewById<View>(R.id.laptimes_list_item_holder) as LinearLayout
         listItemHolder.removeAllViews()
-        val ltb = mDataSet!![position]
-        val lapTimes = ltb!!.lapTimes
-        for (i in lapTimes!!.indices) {
-            val lapItemView = mLayoutInflator!!.inflate(R.layout.laptime_item, null)
+        val ltb = mDataSet[position]
+        val lapTimes = ltb.lapTimes
+        for (i in lapTimes.indices) {
+            val lapItemView = mLayoutInflater.inflate(R.layout.laptime_item, null)
             if (i == 0) {
                 val t = lapItemView.findViewById<View>(R.id.laptime_text) as TextView
                 t.text = TimeUtils.createStyledSpannableString(
                     mContext,
-                    lapTimes!![i]!!,
+                    lapTimes[i],
                     true
                 )
             }
             val t2 = lapItemView.findViewById<View>(R.id.laptime_text2) as TextView
-            if (i < lapTimes!!.size - 1 && lapTimes!!.size > 1) {
-                var laptime = lapTimes!![i]!! - lapTimes!![i + 1]!!
-                if (laptime < 0) laptime = lapTimes!![i]!!
+            if (i < lapTimes.size - 1 && lapTimes.size > 1) {
+                var laptime = lapTimes[i] - lapTimes[i + 1]
+                if (laptime < 0) laptime = lapTimes[i]
                 t2.text = TimeUtils.createStyledSpannableString(
                     mContext,
                     laptime,
@@ -57,7 +56,7 @@ class LapTimesBaseAdapter(
             } else {
                 t2.text = TimeUtils.createStyledSpannableString(
                     mContext,
-                    lapTimes!![i]!!,
+                    lapTimes[i],
                     true
                 )
             }

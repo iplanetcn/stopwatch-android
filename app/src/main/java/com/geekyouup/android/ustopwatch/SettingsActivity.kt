@@ -1,48 +1,49 @@
 package com.geekyouup.android.ustopwatch
 
+import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
-import android.widget.CompoundButton
+import android.os.VibratorManager
 import androidx.appcompat.app.AppCompatActivity
+import com.geekyouup.android.ustopwatch.compat.compatVibrator
+import com.geekyouup.android.ustopwatch.databinding.SettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
-    /**
-     * Called when the activity is first created.
-     */
+    private lateinit var binding: SettingsBinding
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.settings)
-        val mSwitchSoundTicking = findViewById<CompoundButton>(R.id.settings_seconds_sound)
-        mSwitchSoundTicking.setOnCheckedChangeListener { compoundButton: CompoundButton?, b: Boolean ->
-            isTicking = b
+        binding = SettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.settingsSecondsSound.setOnCheckedChangeListener { _, isChecked ->
+            isTicking = isChecked
         }
-        val mSwitchAnimating = findViewById<CompoundButton>(R.id.settings_animations)
-        mSwitchAnimating.setOnCheckedChangeListener { compoundButton: CompoundButton?, b: Boolean ->
-            isAnimating = b
+        binding.settingsAnimations.setOnCheckedChangeListener { _, isChecked ->
+            isAnimating = isChecked
         }
-        val mSwitchEndlessAlarm = findViewById<CompoundButton>(R.id.settings_endless_alert)
-        mSwitchEndlessAlarm.setOnCheckedChangeListener { compoundButton: CompoundButton?, b: Boolean ->
-            isEndlessAlarm = b
+        binding.settingsEndlessAlert.setOnCheckedChangeListener { _, isChecked ->
+            isEndlessAlarm = isChecked
         }
-        val mSwitchVibrate = findViewById<CompoundButton>(R.id.settings_vibrate)
-        mSwitchVibrate.setOnCheckedChangeListener { compoundButton: CompoundButton?, b: Boolean ->
-            isVibrate = b
+        binding.settingsVibrate.setOnCheckedChangeListener { _, isChecked ->
+            isVibrate = isChecked
         }
-        mSwitchEndlessAlarm.isChecked = isEndlessAlarm
-        mSwitchSoundTicking.isChecked = isTicking
-        mSwitchVibrate.isChecked = isVibrate
-        if (!(getSystemService(VIBRATOR_SERVICE) as Vibrator).hasVibrator()) {
-            mSwitchVibrate.isChecked = false
-            mSwitchVibrate.isEnabled = false
+        binding.settingsEndlessAlert.isChecked = isEndlessAlarm
+        binding.settingsSecondsSound.isChecked = isTicking
+        binding.settingsVibrate.isChecked = isVibrate
+        if (!compatVibrator().hasVibrator()) {
+            binding.settingsVibrate.isChecked = false
+            binding.settingsVibrate.isEnabled = false
         }
-        mSwitchAnimating.isChecked = isAnimating
+        binding.settingsAnimations.isChecked = isAnimating
     }
+
 
     override fun onPause() {
         super.onPause()
         val settings =
-            getSharedPreferences(UltimateStopwatchActivity.Companion.PREFS_NAME, MODE_PRIVATE)
+            getSharedPreferences(UltimateStopwatchActivity.PREFS_NAME, MODE_PRIVATE)
         val editor = settings.edit()
         editor.putBoolean(KEY_TICKING, isTicking)
         editor.putBoolean(KEY_ENDLESS_ALARM, isEndlessAlarm)

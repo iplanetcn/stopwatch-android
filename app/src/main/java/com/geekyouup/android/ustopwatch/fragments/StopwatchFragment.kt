@@ -27,8 +27,8 @@ class StopwatchFragment : Fragment() {
     private lateinit var mTimerText: TextView
     private var mCurrentTimeMillis: Double = 0.0
     private var mSoundManager: SoundManager? = null
-    private var mRunningState by Delegates.notNull<Boolean>()
-    private var mLastSecond by Delegates.notNull<Int>()
+    private var mRunningState: Boolean = false
+    private var mLastSecond: Int = 0
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -89,8 +89,7 @@ class StopwatchFragment : Fragment() {
                         false
                     )
                 ) {
-                    mCurrentTimeMillis =
-                        m.data.getDouble(UltimateStopwatchActivity.MSG_NEW_TIME_DOUBLE)
+                    mCurrentTimeMillis = m.data.getDouble(UltimateStopwatchActivity.MSG_NEW_TIME_DOUBLE)
                     setTime(mCurrentTimeMillis)
                     val currentSecond = mCurrentTimeMillis.toInt() / 1000
                     if (currentSecond > mLastSecond) {
