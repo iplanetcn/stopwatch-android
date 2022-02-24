@@ -1,77 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_alignParentTop="true"
-    android:background="@color/stopwatch_background"
-    android:orientation="horizontal">
+    android:background="@color/stopwatch_background">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
-    <com.geekyouup.android.ustopwatch.fragments.StopwatchCustomView
-        android:id="@+id/swview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.geekyouup.android.ustopwatch.view.StopwatchView
+        android:id="@+id/stopwatch_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="5dp"
         android:layout_weight="1"
-        custom:watchType="type_stopwatch" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:watchType="type_stopwatch" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center">
+    <TextView
+        android:id="@+id/counter_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/default_time"
+        android:textColor="@color/text_grey"
+        android:textSize="@dimen/counter_font"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_center_vertical" />
 
-        <TextView
-            android:id="@+id/counter_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/default_time"
-            android:textColor="@color/text_grey"
-            android:textSize="@dimen/counter_font" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/startButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:layout_constraintHorizontal_weight="3"
+        android:fontFamily="sans-serif"
+        android:text="@string/start"
 
-        <LinearLayout
-            android:id="@+id/buttonbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/counter_text"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:showDividers="middle">
+        app:layout_constraintStart_toStartOf="@+id/guideline_center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/resetButton"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/startButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif"
-                android:text="@string/start"
-                android:textColor="@drawable/red_button_landscape_text_color" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/resetButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_weight="3"
+        android:layout_margin="8dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/reset"
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/resetButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif"
-                android:text="@string/reset"
-                android:textColor="@drawable/red_button_landscape_text_color" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal"
+        app:layout_constraintStart_toEndOf="@+id/startButton"
+        app:layout_constraintEnd_toStartOf="@+id/saveButton"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/saveButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif"
-                android:text="@string/lap"
-                android:textColor="@drawable/red_button_landscape_text_color" />
-        </LinearLayout>
-    </RelativeLayout>
-</LinearLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_weight="2"
+        android:layout_margin="8dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/lap"
+
+        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal"
+        app:layout_constraintStart_toEndOf="@+id/resetButton"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

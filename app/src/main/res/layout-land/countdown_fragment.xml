@@ -1,70 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/countdown_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_alignParentTop="true"
-    android:background="@color/countdown_background"
-    android:orientation="horizontal">
+    android:background="@color/stopwatch_background">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@color/countdown_background"
-        android:gravity="center">
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
-        <TextView
-            android:id="@+id/time_counter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/countdown_background"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/default_time"
-            android:textColor="@color/text_grey"
-            android:textSize="@dimen/counter_font" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
 
-        <LinearLayout
-            android:id="@+id/buttonbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/time_counter"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:showDividers="middle">
+    <TextView
+        android:id="@+id/time_counter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/stopwatch_background"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/default_time"
+        android:textColor="@color/text_grey"
+        android:textSize="@dimen/counter_font"
+        app:layout_constraintBaseline_toBottomOf="@+id/guideline_center_horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_center_vertical"
+        app:layout_constraintStart_toStartOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/startButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif"
-                android:text="@string/start"
-                android:textColor="@drawable/blue_button_landscape_text_color"
-                android:textSize="18sp" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/startButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/start"
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/resetButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif"
-                android:text="@string/reset"
-                android:textColor="@drawable/blue_button_landscape_text_color"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </RelativeLayout>
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/resetButton"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal" />
 
-    <com.geekyouup.android.ustopwatch.fragments.StopwatchCustomView
-        android:id="@+id/cdview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        custom:watchType="type_countdown" />
-</LinearLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/resetButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/reset"
+
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_center_vertical"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/startButton"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal" />
+
+    <com.geekyouup.android.ustopwatch.view.StopwatchView
+        android:id="@+id/countdown_watch_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline_center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:watchType="type_countdown" />
+</androidx.constraintlayout.widget.ConstraintLayout>

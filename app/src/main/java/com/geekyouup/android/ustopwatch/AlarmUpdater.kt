@@ -1,21 +1,40 @@
 package com.geekyouup.android.ustopwatch
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.media.AudioManager
+import android.media.AudioAttributes
+import android.media.RingtoneManager
+import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+
 
 object AlarmUpdater {
     const val INTENT_EXTRA_LAUNCH_COUNTDOWN = "launch_countdown"
+    const val CHANNEL_ID = "STOPWATCH_NOTIFICATIONS"
+    const val NOTIFICATION_ID = 9527
+
+    const val NAME = "stopwatch_notify"
+
+    @SuppressLint("UnspecifiedImmutableFlag")
     fun cancelCountdownAlarm(context: Context?) {
         try {
             val alarmMan = context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val defineIntent = Intent(context, UpdateService::class.java)
             defineIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-            val piWakeUp =
+            val piWakeUp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.getService(
+                    context,
+                    0,
+                    defineIntent,
+                    PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
                 PendingIntent.getService(context, 0, defineIntent, PendingIntent.FLAG_NO_CREATE)
+            }
             if (piWakeUp != null) {
                 alarmMan.cancel(piWakeUp)
             }
@@ -30,28 +49,53 @@ object AlarmUpdater {
     }
 
     //cancels alarm then sets new one
+    @SuppressLint("UnspecifiedImmutableFlag")
     fun setCountdownAlarm(context: Context, inMillis: Long) {
         val alarmMan = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val defineIntent = Intent(context, UpdateService::class.java)
         defineIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         val piWakeUp =
-            PendingIntent.getService(context, 0, defineIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        //alarmMan.cancel(piWakeUp);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.getService(
+                    context,
+                    0,
+                    defineIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
+                PendingIntent.getService(
+                    context,
+                    0,
+                    defineIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
+        alarmMan.cancel(piWakeUp)
         if (inMillis != -1L) {
             alarmMan[AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + inMillis] = piWakeUp
         }
     }
 
-    fun showChronometerNotification(context: Context?, startTime: Long) {
+    @SuppressLint("UnspecifiedImmutableFlag")
+    fun showChronometerNotification(context: Context, startTime: Long) {
         // The PendingIntent to launch our activity if the user selects this notification
-        val launcher = Intent(context, UltimateStopwatchActivity::class.java)
+        val launcher = Intent(context, MainActivity::class.java)
         launcher.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         val contentIntent =
-            PendingIntent.getActivity(context, 0, launcher, PendingIntent.FLAG_ONE_SHOT)
-        val notification = NotificationCompat.Builder(context!!)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.getActivity(
+                    context,
+                    0,
+                    launcher,
+                    PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
+                PendingIntent.getActivity(context, 0, launcher, PendingIntent.FLAG_ONE_SHOT)
+            }
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle(context.getString(R.string.app_name))
             .setWhen(System.currentTimeMillis() - startTime)
-            .setSmallIcon(R.drawable.notification_icon)
+            .setSmallIcon(R.drawable.ic_notification_icon)
             .setContentIntent(contentIntent)
             .setUsesChronometer(true)
             .build()
@@ -61,28 +105,6 @@ object AlarmUpdater {
         notificationManager.notify(R.layout.stopwatch_fragment, notification)
     }
 
-    /*public static void showCountdownChronometerNotification(Context context, long endTime)
-    {
-        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-        {
-            // The PendingIntent to launch our activity if the user selects this notification
-            Intent launcher = new Intent(context,UltimateStopwatchActivity.class);
-            launcher.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent contentIntent = PendingIntent.getActivity(context, 0,launcher,PendingIntent.FLAG_ONE_SHOT);
-
-            Notification notification = new Notification.Builder(context)
-                    .setContentTitle("Ultimate Stopwatch")
-                    .setUsesChronometer(true)
-                    .setWhen(System.currentTimeMillis() + endTime)
-                    .setSmallIcon(R.drawable.notification_icon)
-                    .setContentIntent(contentIntent)
-                    .build();
-
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            // We use a layout id because it is a unique number.  We use it later to cancel.
-            notificationManager.notify(R.layout.countdown_fragment, notification);
-        }
-    }  */
     fun cancelChronometerNotification(context: Context?) {
         try {
             (context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(
@@ -95,46 +117,60 @@ object AlarmUpdater {
 
     class UpdateService : Service() {
         override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-            // Build the widget update for today
-            //no need for a screen, this just has to refresh all content in the background
-            //cancelCountdownAlarm(this);
+            cancelCountdownAlarm(this)
             notifyStatusBar()
             stopSelf()
             return START_NOT_STICKY
         }
 
         //show Countdown Complete notification
+        @SuppressLint("UnspecifiedImmutableFlag")
         private fun notifyStatusBar() {
             // The PendingIntent to launch our activity if the user selects this notification
-            val launcher = Intent(this, UltimateStopwatchActivity::class.java)
+            val launcher = Intent(this, MainActivity::class.java)
             launcher.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             launcher.putExtra(INTENT_EXTRA_LAUNCH_COUNTDOWN, true)
             val contentIntent =
-                PendingIntent.getActivity(this, 0, launcher, PendingIntent.FLAG_ONE_SHOT)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.getActivity(
+                        this,
+                        0,
+                        launcher,
+                        PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+                    )
+                } else {
+                    PendingIntent.getActivity(this, 0, launcher, PendingIntent.FLAG_ONE_SHOT)
+                }
 
             // Set the icon, scrolling text and timestamp
-            val notification = NotificationCompat.Builder(this)
+            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.countdown_complete)) //.setSubText(getString(R.string.countdown_complete))
-                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.ic_notification_icon)
                 .setContentIntent(contentIntent)
+                .setDefaults(Notification.DEFAULT_ALL)
                 .build()
-            try {
-                notification.ledARGB = -0x7f7f80
-                notification.ledOnMS = 500
-                notification.ledOffMS = 1000
-                if (SettingsActivity.isVibrate) {
-                    notification.vibrate = longArrayOf(1000)
-                }
-                notification.flags = notification.flags or Notification.FLAG_SHOW_LIGHTS
-                notification.audioStreamType = AudioManager.STREAM_NOTIFICATION
-//                notification.sound= Uri.parse("android.resource://com.geekyouup.android.ustopwatch/" + R.raw.alarm)
-            } catch (ignored: Exception) {
+
+            val notificationChannel: NotificationChannel
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notificationChannel =
+                    NotificationChannel(CHANNEL_ID, NAME, NotificationManager.IMPORTANCE_DEFAULT)
+                notificationChannel.enableLights(true)
+                notificationChannel.enableVibration(true)
+                notificationChannel.vibrationPattern = longArrayOf(1000)
+                notificationChannel.lightColor = -0x7f7f80
+                notificationChannel.lockscreenVisibility
+                notificationChannel.setSound(
+                    RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION),
+                    AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                        .build()
+                )
+                NotificationManagerCompat.from(this).createNotificationChannel(notificationChannel)
             }
-            notification.defaults = notification.defaults or Notification.DEFAULT_ALL
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            // We use a layout id because it is a unique number.  We use it later to cancel.
-            notificationManager.notify(R.layout.main, notification)
+
+            NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, notification)
         }
 
         override fun onBind(arg0: Intent): IBinder? {

@@ -13,6 +13,11 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = SettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {
+            finish()
+        }
         binding.settingsSecondsSound.setOnCheckedChangeListener { _, isChecked ->
             isTicking = isChecked
         }
@@ -41,10 +46,9 @@ class SettingsActivity : AppCompatActivity() {
         binding.settingsAnimations.isChecked = isAnimating
     }
 
-
     override fun onPause() {
         super.onPause()
-        getSharedPreferences(UltimateStopwatchActivity.PREFS_NAME, MODE_PRIVATE)
+        getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
             .edit()
             .putBoolean(KEY_TICKING, isTicking)
             .putBoolean(KEY_ENDLESS_ALARM, isEndlessAlarm)

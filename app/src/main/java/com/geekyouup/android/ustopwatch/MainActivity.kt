@@ -21,24 +21,25 @@ import com.geekyouup.android.ustopwatch.fragments.CountdownFragment
 import com.geekyouup.android.ustopwatch.fragments.LapTimeRecorder
 import com.geekyouup.android.ustopwatch.fragments.LapTimesFragment
 import com.geekyouup.android.ustopwatch.fragments.StopwatchFragment
+import com.geekyouup.android.ustopwatch.manager.SoundManager
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.*
 
-class UltimateStopwatchActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainBinding
     private var mPowerMan: PowerManager? = null
     private var mWakeLock: WakeLock? = null
     var lapTimeFragment: LapTimesFragment? = null
     private var mCountdownFragment: CountdownFragment? = null
     private var mStopwatchFragment: StopwatchFragment? = null
-    private var mSoundManager: SoundManager? = null
     private var mMenu: Menu? = null
     private var mFlashResetIcon = false
 
     /**
      * Called when the activity is first created.
      */
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainBinding.inflate(layoutInflater)
@@ -46,13 +47,14 @@ class UltimateStopwatchActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         window.setBackgroundDrawable(null)
         title = getString(R.string.app_name)
-        mSoundManager = SoundManager.getInstance(this)
         binding.viewpager.offscreenPageLimit = 2
         setupActionBar()
         mPowerMan = getSystemService(POWER_SERVICE) as PowerManager
         volumeControlStream = AudioManager.STREAM_MUSIC
-        val screenSize = resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+        val screenSize =
+            resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
         if (screenSize == Configuration.SCREENLAYOUT_SIZE_SMALL) {
+            @SuppressLint("SourceLockedOrientationActivity")
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
         if (intent != null && intent.getBooleanExtra(
@@ -60,7 +62,7 @@ class UltimateStopwatchActivity : AppCompatActivity() {
                 false
             )
         ) {
-            supportActionBar!!.setSelectedNavigationItem(2)
+            binding.viewpager.setCurrentItem(2, true)
         }
     }
 
@@ -138,10 +140,11 @@ class UltimateStopwatchActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         LapTimeRecorder.instance?.loadTimes(this)
+        @Suppress("DEPRECATION")
         mWakeLock = mPowerMan!!.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, WAKE_LOCK_KEY)
-        mWakeLock?.run { acquire() }
+        mWakeLock?.apply { acquire(10*60*1000L /*10 minutes*/) }
         val settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        mSoundManager!!.setAudioState(settings.getBoolean(KEY_AUDIO_STATE, true))
+        SoundManager.setAudioState(settings.getBoolean(KEY_AUDIO_STATE, true))
         SettingsActivity.loadSettings(settings)
         if (mMenu != null) {
             val audioButton = mMenu!!.findItem(R.id.menu_audio_toggle)
@@ -165,7 +168,7 @@ class UltimateStopwatchActivity : AppCompatActivity() {
                 if (mFlashResetIcon) //icon hint for set countdown time
                 {
                     val item = menu.findItem(R.id.menu_reset_time)
-                    item.setActionView(R.layout.action_bar_settime_animation)
+                    item.setActionView(R.layout.toolbar_set_time_animation)
                     val iv = item.actionView.findViewById<ImageView>(R.id.set_time_imageview)
                     (iv.drawable as AnimationDrawable).start()
 
@@ -202,7 +205,7 @@ class UltimateStopwatchActivity : AppCompatActivity() {
                 mCountdownFragment!!.requestTimeDialog()
             }
         } else if (item.itemId == R.id.menu_audio_toggle) {
-            mSoundManager!!.setAudioState(!SoundManager.isAudioOn)
+            SoundManager.setAudioState(!SoundManager.isAudioOn)
             item.setIcon(if (SoundManager.isAudioOn) R.drawable.ic_baseline_volume_up_24 else R.drawable.ic_baseline_volume_off_24)
         } else if (item.itemId == R.id.menu_settings) {
             val intent = Intent(this, SettingsActivity::class.java)

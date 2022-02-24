@@ -20,13 +20,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
 import com.geekyouup.android.ustopwatch.*
-import com.geekyouup.android.ustopwatch.compat.compatVibrator
+import com.geekyouup.android.ustopwatch.compat.startVibrate
 import com.geekyouup.android.ustopwatch.databinding.CountdownFragmentBinding
+import com.geekyouup.android.ustopwatch.manager.SoundManager
+import com.geekyouup.android.ustopwatch.manager.Sounds
 
 @SuppressLint("ClickableViewAccessibility")
 class CountdownFragment : Fragment() {
     private var mCurrentTimeMillis = 0.0
-    private var mSoundManager: SoundManager? = null
     private var mLastHour = 0
     private var mLastMin = 0
     private var mLastSec = 0
@@ -34,6 +35,7 @@ class CountdownFragment : Fragment() {
     private var mLastSecondTicked = 0
 
     private lateinit var binding: CountdownFragmentBinding
+
     //countdown picker dialog variables
     private var mDialogOnScreen = false
     override fun onCreateView(
@@ -41,7 +43,6 @@ class CountdownFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mSoundManager = SoundManager.getInstance(activity)
         binding = CountdownFragmentBinding.inflate(inflater, container, false)
         binding.timeCounter.setOnTouchListener { _, _ ->
             if (mCurrentTimeMillis == 0.0) {
@@ -51,8 +52,8 @@ class CountdownFragment : Fragment() {
         }
         binding.resetButton.setOnClickListener {
             reset()
-            mSoundManager!!.stopEndlessAlarm()
-            mSoundManager!!.playSound(SoundManager.SOUND_RESET)
+            SoundManager.stopEndlessAlarm()
+            SoundManager.playSound(requireContext(), Sounds.SOUND_RESET)
         }
         binding.startButton.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
@@ -69,55 +70,56 @@ class CountdownFragment : Fragment() {
         val settings = requireActivity().getSharedPreferences(COUNTDOWN_PREFS, Context.MODE_PRIVATE)
         val editor = settings.edit()
         editor.putBoolean(PREF_IS_RUNNING, mRunningState)
-        binding.cdview.saveState(editor)
+        binding.countdownWatchView.saveState(editor)
         editor.putInt(KEY_LAST_HOUR, mLastHour)
         editor.putInt(KEY_LAST_MIN, mLastMin)
         editor.putInt(KEY_LAST_SEC, mLastSec)
         editor.apply()
-        binding.cdview.stop()
+        binding.countdownWatchView.stop()
     }
 
     override fun onResume() {
         super.onResume()
         // cancel next alarm if there is one, and clear notification bar
         AlarmUpdater.cancelCountdownAlarm(activity)
-        binding.cdview.handler = object : Handler(Looper.myLooper()!!) {
+        binding.countdownWatchView.handler = object : Handler(Looper.myLooper()!!) {
             override fun handleMessage(m: Message) {
                 when {
                     m.data.getBoolean(MSG_REQUEST_ICON_FLASH, false) -> {
-                        (activity as UltimateStopwatchActivity?)!!.flashResetTimeIcon()
+                        (activity as MainActivity?)!!.flashResetTimeIcon()
                     }
                     m.data.getBoolean(MSG_COUNTDOWN_COMPLETE, false) -> {
                         val appResuming = m.data.getBoolean(MSG_APP_RESUMING, false)
                         if (!appResuming) {
-                            mSoundManager!!.playSound(
-                                SoundManager.SOUND_COUNTDOWN_ALARM,
+                            SoundManager.playSound(
+                                requireContext(),
+                                Sounds.SOUND_COUNTDOWN_ALARM,
                                 SettingsActivity.isEndlessAlarm
                             )
                             if (SettingsActivity.isVibrate && activity != null) {
-                                requireContext().compatVibrator().vibrate(1000)
+                                requireContext().startVibrate(1000)
                             }
                         }
                         reset(!appResuming && SettingsActivity.isEndlessAlarm)
                     }
                     m.data.getBoolean(
-                        UltimateStopwatchActivity.MSG_UPDATE_COUNTER_TIME,
+                        MainActivity.MSG_UPDATE_COUNTER_TIME,
                         false
                     ) -> {
                         mCurrentTimeMillis = m.data.getDouble(
-                            UltimateStopwatchActivity.MSG_NEW_TIME_DOUBLE
+                            MainActivity.MSG_NEW_TIME_DOUBLE
                         )
 
                         //If we've crossed into a new second then make the tick sound
                         val currentSecond = mCurrentTimeMillis.toInt() / 1000
                         if (currentSecond > mLastSecondTicked) {
-                            mSoundManager!!.doTick()
+                            SoundManager.doTick(requireContext())
                         }
                         mLastSecondTicked = currentSecond
                         setTime(mCurrentTimeMillis)
                     }
                     m.data.getBoolean(
-                        UltimateStopwatchActivity.MSG_STATE_CHANGE,
+                        MainActivity.MSG_STATE_CHANGE,
                         false
                     ) -> {
                         setUIState(false)
@@ -130,14 +132,15 @@ class CountdownFragment : Fragment() {
         mLastMin = settings.getInt(KEY_LAST_MIN, 0)
         mLastSec = settings.getInt(KEY_LAST_SEC, 0)
         mRunningState = settings.getBoolean(PREF_IS_RUNNING, false)
-        binding.cdview.restoreState(settings)
-        mCurrentTimeMillis = binding.cdview.watchTime
-        (activity as UltimateStopwatchActivity?)!!.registerCountdownFragment(this)
+        binding.countdownWatchView.restoreState(settings)
+        mCurrentTimeMillis = binding.countdownWatchView.watchTime
+        (activity as MainActivity?)!!.registerCountdownFragment(this)
         val paint = Paint()
         val bounds = Rect()
-        paint.typeface = Typeface.SANS_SERIF // your preference here
-        paint.textSize =
-            resources.getDimension(R.dimen.counter_font) // have this the same as your text size
+        // your preference here
+        paint.typeface = Typeface.SANS_SERIF
+        // have this the same as your text size
+        paint.textSize = resources.getDimension(R.dimen.counter_font)
         val text = "-00:00:00.000"
         paint.getTextBounds(text, 0, text.length, bounds)
         val textWidth = bounds.width()
@@ -151,27 +154,27 @@ class CountdownFragment : Fragment() {
     private fun startStop() {
         if (!isRunning && mCurrentTimeMillis == 0.0) {
             //flash the choose time button in the action bar
-            (activity as UltimateStopwatchActivity?)!!.flashResetTimeIcon()
+            (activity as MainActivity?)!!.flashResetTimeIcon()
         } else {
-            binding.cdview.startStop()
+            binding.countdownWatchView.startStop()
             binding.resetButton.isEnabled = true
             binding.startButton.text =
                 if (isRunning) getString(R.string.pause) else getString(R.string.start)
         }
     }
 
-    @JvmOverloads
     fun reset(endlessAlarmSounding: Boolean = false) {
         binding.resetButton.isEnabled = endlessAlarmSounding
         binding.startButton.text = if (isAdded) getString(R.string.start) else "START"
-        binding.cdview.setTime(mLastHour, mLastMin, mLastSec, true)
+        binding.countdownWatchView.setTime(mLastHour, mLastMin, mLastSec, true)
     }
 
+    @Suppress("SameParameterValue")
     private fun setTime(hour: Int, minute: Int, seconds: Int, disableReset: Boolean) {
         mLastHour = hour
         mLastMin = minute
         mLastSec = seconds
-        binding.cdview.setTime(hour, minute, seconds, false)
+        binding.countdownWatchView.setTime(hour, minute, seconds, false)
         setUIState(disableReset)
     }
 
@@ -183,12 +186,12 @@ class CountdownFragment : Fragment() {
         )
     }
 
-    val isRunning get() = binding.cdview.isRunning
+    val isRunning get() = binding.countdownWatchView.isRunning
 
     private fun setUIState(disableReset: Boolean) {
         val stateChanged = mRunningState != isRunning
         mRunningState = isRunning
-        binding.resetButton.isEnabled = mSoundManager!!.isEndlessAlarmSounding || !disableReset
+        binding.resetButton.isEnabled = SoundManager.isEndlessAlarmSounding || !disableReset
         if (!mRunningState && mCurrentTimeMillis == 0.0 && mHoursValue == 0 && mMinsValue == 0 && mSecsValue == 0 && isAdded) {
             binding.startButton.text = getString(R.string.start)
         } else {
@@ -197,7 +200,10 @@ class CountdownFragment : Fragment() {
                     if (mRunningState) getString(R.string.pause) else getString(R.string.start)
             }
             if (stateChanged) {
-                mSoundManager!!.playSound(if (isRunning) SoundManager.SOUND_START else SoundManager.SOUND_STOP)
+                SoundManager.playSound(
+                    requireContext(),
+                    if (isRunning) Sounds.SOUND_START else Sounds.SOUND_STOP
+                )
             }
         }
     }
@@ -212,10 +218,6 @@ class CountdownFragment : Fragment() {
         if (mSecsValue == 0) {
             mSecsValue = mLastSec
         }
-        requestAPI11TimeDialog()
-    }
-
-    private fun requestAPI11TimeDialog() {
         // stop stacking of dialogs
         if (mDialogOnScreen) {
             return
@@ -242,13 +244,14 @@ class CountdownFragment : Fragment() {
             mHoursValue = npHours.value
             mMinsValue = npMins.value
             mSecsValue = npSecs.value
-            setTime(
-                mHoursValue,
-                mMinsValue, mSecsValue, true
-            )
+            setTime(mHoursValue, mMinsValue, mSecsValue, true)
         }
-        mSelectTime.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.timer_cancel)) { _, _ ->
-            mDialogOnScreen = false }
+        mSelectTime.setButton(
+            AlertDialog.BUTTON_NEGATIVE,
+            getString(R.string.timer_cancel)
+        ) { _, _ ->
+            mDialogOnScreen = false
+        }
         mSelectTime.setOnCancelListener {
             mDialogOnScreen = false
         }
@@ -257,7 +260,7 @@ class CountdownFragment : Fragment() {
     }
 
     companion object {
-        private const val COUNTDOWN_PREFS = "USW_CDFRAG_PREFS"
+        private const val COUNTDOWN_PREFS = "STOPWATCH_PREFS"
         private const val PREF_IS_RUNNING = "key_countdown_is_running"
         private const val KEY_LAST_HOUR = "key_last_hour"
         private const val KEY_LAST_MIN = "key_last_min"

@@ -1,4 +1,4 @@
-package com.geekyouup.android.ustopwatch.fragments
+package com.geekyouup.android.ustopwatch.view
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
@@ -17,10 +17,12 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import com.geekyouup.android.ustopwatch.*
-import com.geekyouup.android.ustopwatch.compat.compatVibrator
+import com.geekyouup.android.ustopwatch.compat.startVibrate
+import com.geekyouup.android.ustopwatch.fragments.CountdownFragment
+import com.geekyouup.android.ustopwatch.manager.SoundManager
 import kotlin.math.abs
 
-class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
+class StopwatchView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private var mIsStopwatch = true //true=stopwatch, false=countdown
     var isRunning = false
         private set
@@ -141,20 +143,20 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
         mBackgroundStartY = (mCanvasHeight - mBackgroundImage.height) / 2
         mAppOffsetX = (mCanvasWidth - mBackgroundImage.width) / 2
         if (mBackgroundStartY < 0) mAppOffsetY = -mBackgroundStartY
-        mSecsCenterY =
-            mBackgroundStartY + mBackgroundImage.height / 2 //new graphics have watch center in center
-        mMinsCenterY =
-            mBackgroundStartY + mBackgroundImage.height * 314 / 1000 //mSecsCenterY - 44;
+        //new graphics have watch center in center
+        mSecsCenterY = mBackgroundStartY + mBackgroundImage.height / 2
+        //mSecsCenterY - 44
+        mMinsCenterY = mBackgroundStartY + mBackgroundImage.height * 314 / 1000
         mSecsCenterX = mCanvasWidth / 2
         mMinsCenterX = mCanvasWidth / 2
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         // Account for padding
-        val xpad = paddingLeft + paddingRight
-        val ypad = paddingTop + paddingBottom
-        mCanvasWidth = w - xpad
-        mCanvasHeight = h - ypad
+        val xPad = paddingLeft + paddingRight
+        val yPad = paddingTop + paddingBottom
+        mCanvasWidth = w - xPad
+        mCanvasHeight = h - yPad
         init()
     }
 
@@ -168,7 +170,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
             null
         )
 
-        // draw the mins hand with its current rotatiom
+        // draw the mins hand with its current rotation
         canvas.save()
         canvas.rotate(
             Math.toDegrees(mMinsAngle.toDouble()).toFloat(),
@@ -197,7 +199,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
         canvas.restore()
     }
 
-    //set the time on the stopwatch/countdown face, animating the hands if resettings countdown
+    //set the time on the stopwatch/countdown face, animating the hands if resetting countdown
     //To make the animation feel right, we always wind backwards when resetting
     fun setTime(hours: Int, minutes: Int, seconds: Int, resetting: Boolean) {
         isRunning = false
@@ -289,7 +291,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
         {
             //countdown reset can be to any clock position, ensure CW rotation
             if (toAngle > fromAngle) toAngle else toAngle + twoPI
-        } else  //not restting hands must take shortest route
+        } else  //not resetting hands must take shortest route
         {
             val absFromMinusTo = abs(fromAngle - toAngle)
             //toAngle-twoPi, toAngle, toAngle+twoPi
@@ -310,7 +312,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
             if (isRunning) {
                 invalidate()
                 removeCallbacks(this)
-                ViewCompat.postOnAnimation(this@StopwatchCustomView, this)
+                ViewCompat.postOnAnimation(this@StopwatchView, this)
             }
         }
     }
@@ -345,9 +347,8 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
-            val sm: SoundManager = SoundManager.getInstance(context)!!
-            if (sm.isEndlessAlarmSounding) {
-                sm.stopEndlessAlarm()
+            if (SoundManager.isEndlessAlarmSounding) {
+                SoundManager.stopEndlessAlarm()
             } else {
                 mTouching = System.currentTimeMillis()
             }
@@ -381,7 +382,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
 
         //vibrate
         if (SettingsActivity.isVibrate) {
-            context.compatVibrator().vibrate(20)
+            context.startVibrate(20)
         }
         removeCallbacks(animator)
         post(animator)
@@ -390,15 +391,14 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
     fun stop() {
         isRunning = false
 
-        //vibrate
+        // vibrate
         if (SettingsActivity.isVibrate) {
-            context.compatVibrator().vibrate(20)
+            context.startVibrate(20)
         }
         removeCallbacks(animator)
     }
 
-    val watchTime: Double
-        get() = mDisplayTimeMillis.toDouble()
+    val watchTime get() = mDisplayTimeMillis.toDouble()
 
     /**
      * Dump state to the provided Bundle. Typically called when the
@@ -438,8 +438,10 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
                 KEY_LAST_TIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX,
                 System.currentTimeMillis()
             )
-            mDisplayTimeMillis =
-                savedState.getInt(KEY_NOW_TIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX, 0)
+            mDisplayTimeMillis = savedState.getInt(
+                KEY_NOW_TIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX,
+                0
+            )
             updateWatchState(true)
             removeCallbacks(animator)
             if (isRunning) post(animator)
@@ -460,7 +462,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
 
     private fun notifyStateChanged() {
         val b = Bundle()
-        b.putBoolean(UltimateStopwatchActivity.MSG_STATE_CHANGE, true)
+        b.putBoolean(MainActivity.MSG_STATE_CHANGE, true)
         sendMessageToHandler(b)
     }
 
@@ -480,8 +482,8 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
     //send the latest time to the parent fragment to populate the digits
     private fun broadcastClockTime(mTime: Double) {
         val b = Bundle()
-        b.putBoolean(UltimateStopwatchActivity.MSG_UPDATE_COUNTER_TIME, true)
-        b.putDouble(UltimateStopwatchActivity.MSG_NEW_TIME_DOUBLE, mTime)
+        b.putBoolean(MainActivity.MSG_UPDATE_COUNTER_TIME, true)
+        b.putDouble(MainActivity.MSG_NEW_TIME_DOUBLE, mTime)
         sendMessageToHandler(b)
     }
 
@@ -501,15 +503,14 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
     }
 
     init {
-
         //find out if this view is specified as a stopwatch or countdown view
         val a = context.theme.obtainStyledAttributes(
             attrs,
-            R.styleable.StopwatchCustomView,
+            R.styleable.StopwatchView,
             0, 0
         )
         mIsStopwatch = try {
-            a.getBoolean(R.styleable.StopwatchCustomView_watchType, true)
+            a.getBoolean(R.styleable.StopwatchView_watchType, true)
         } finally {
             a.recycle()
         }

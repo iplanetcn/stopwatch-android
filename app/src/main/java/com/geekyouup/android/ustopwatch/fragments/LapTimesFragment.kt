@@ -9,7 +9,7 @@ import android.widget.AdapterView.OnItemLongClickListener
 import android.widget.ListView
 import androidx.fragment.app.ListFragment
 import com.geekyouup.android.ustopwatch.R
-import com.geekyouup.android.ustopwatch.UltimateStopwatchActivity
+import com.geekyouup.android.ustopwatch.MainActivity
 import com.geekyouup.android.ustopwatch.databinding.LaptimesFragmentBinding
 
 class LapTimesFragment : ListFragment(), LapTimeListener {
@@ -84,7 +84,7 @@ class LapTimesFragment : ListFragment(), LapTimeListener {
         })
         mAdapter = LapTimesBaseAdapter(requireActivity(), mLapTimes)
         listAdapter = mAdapter
-        (activity as UltimateStopwatchActivity?)!!.registerLapTimeFragment(this)
+        (activity as MainActivity?)!!.registerLapTimeFragment(this)
 
         //on long touch start the contextual actionbar
         getListView().onItemLongClickListener =
@@ -122,15 +122,14 @@ class LapTimesFragment : ListFragment(), LapTimeListener {
         mAdapter!!.notifyDataSetChanged()
     }
 
-    fun notifyDataSetChanged() {
+    private fun notifyDataSetChanged() {
         mAdapter!!.notifyDataSetChanged()
     }
 
     override fun lapTimesUpdated() {
         if (mLapTimeRecorder == null) mLapTimeRecorder = LapTimeRecorder.instance!!
-        if (mLapTimes == null) mLapTimes = ArrayList()
-        mLapTimes!!.clear()
-        mLapTimes!!.addAll(mLapTimeRecorder!!.times)
+        mLapTimes.clear()
+        mLapTimes.addAll(mLapTimeRecorder!!.times)
         notifyDataSetChanged()
     }
 }

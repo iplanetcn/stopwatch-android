@@ -1,7 +1,7 @@
 package com.geekyouup.android.ustopwatch.fragments
 
 import android.content.Context
-import com.geekyouup.android.ustopwatch.UltimateStopwatchActivity
+import com.geekyouup.android.ustopwatch.MainActivity
 
 class LapTimeRecorder {
     fun loadTimes(cxt: Context) {
@@ -9,13 +9,15 @@ class LapTimeRecorder {
         if (settings != null) {
             var lapTimeNum = 0
             mLapTimes!!.clear()
-            var lt = 0.0
+            val lt = 0.0
             var prevZero = false
             while (settings.getLong(KEY_LAP_TIME_X + lapTimeNum, -1L).toDouble() != -1.0) {
                 lapTimeNum++
                 prevZero = if (lt == 0.0 && prevZero) {
                     continue
-                } else lt == 0.0
+                } else {
+                    lt == 0.0
+                }
                 mLapTimes!!.add(lt)
             }
         }
@@ -37,7 +39,7 @@ class LapTimeRecorder {
         }
     }
 
-    fun recordLapTime(time: Double, activity: UltimateStopwatchActivity?) {
+    fun recordLapTime(time: Double, activity: MainActivity?) {
         mLapTimes!!.add(0, time)
         if (activity != null) {
             val ltf = activity.lapTimeFragment
@@ -70,7 +72,7 @@ class LapTimeRecorder {
             return lapTimeBlocks
         }
 
-    fun reset(activity: UltimateStopwatchActivity?) {
+    fun reset(activity: MainActivity?) {
         activity?.apply {
             mLapTimes!!.clear()
             activity.getSharedPreferences(PREFS_NAME_LAP_TIMES, Context.MODE_PRIVATE)

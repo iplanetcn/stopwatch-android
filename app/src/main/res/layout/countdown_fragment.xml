@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:id="@+id/countdown_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/countdown_background"
-    android:orientation="vertical">
+    android:background="@color/stopwatch_background">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        custom:layout_constraintGuide_end="8dp" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        custom:barrierDirection="top" />
 
     <TextView
         android:id="@+id/time_counter"
@@ -15,47 +27,53 @@
         android:layout_marginTop="5dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/default_time"
-        android:textColor="@color/white"
-        android:textSize="@dimen/counter_font" />
+        android:textColor="@color/text_grey"
+        android:textSize="@dimen/counter_font"
+        custom:layout_constraintEnd_toEndOf="parent"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintTop_toTopOf="parent" />
 
-    <com.geekyouup.android.ustopwatch.fragments.StopwatchCustomView
-        android:id="@+id/cdview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <com.geekyouup.android.ustopwatch.view.StopwatchView
+        android:id="@+id/countdown_watch_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_below="@id/time_counter"
         android:layout_marginBottom="45dp"
+        custom:layout_constraintBottom_toTopOf="@+id/barrier"
+        custom:layout_constraintEnd_toEndOf="parent"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintTop_toBottomOf="@+id/time_counter"
         custom:watchType="type_countdown" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/startButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:showDividers="middle">
+        android:layout_margin="8dp"
+        android:contentDescription="@string/contentdesc_start_cd"
+        android:fontFamily="sans-serif"
+        android:text="@string/start"
+        android:textSize="@dimen/bottom_bar_portrait_button_font_size"
+        custom:layout_constraintBottom_toBottomOf="@+id/guideline"
+        custom:layout_constraintEnd_toStartOf="@+id/resetButton"
+        custom:layout_constraintHorizontal_weight="3"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintTop_toBottomOf="@+id/barrier" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/startButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/contentdesc_start_cd"
-            android:fontFamily="sans-serif"
-            android:text="@string/start"
-            android:textColor="@drawable/blue_button_text_color"
-            android:textSize="@dimen/bottom_bar_portrait_button_font_size" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/resetButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/contentdesc_reset"
-            android:fontFamily="sans-serif"
-            android:text="@string/reset"
-            android:textColor="@drawable/blue_button_text_color"
-            android:textSize="@dimen/bottom_bar_portrait_button_font_size" />
-    </LinearLayout>
-
-</RelativeLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/resetButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/contentdesc_reset"
+        android:fontFamily="sans-serif"
+        android:text="@string/reset"
+        android:textSize="@dimen/bottom_bar_portrait_button_font_size"
+        custom:layout_constraintBottom_toBottomOf="@+id/guideline"
+        custom:layout_constraintEnd_toEndOf="parent"
+        custom:layout_constraintHorizontal_weight="3"
+        custom:layout_constraintStart_toEndOf="@+id/startButton"
+        custom:layout_constraintTop_toBottomOf="@+id/barrier" />
+</androidx.constraintlayout.widget.ConstraintLayout>

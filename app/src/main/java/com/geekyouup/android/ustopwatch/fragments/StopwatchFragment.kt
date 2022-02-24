@@ -17,22 +17,22 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.geekyouup.android.ustopwatch.*
 import com.geekyouup.android.ustopwatch.databinding.StopwatchFragmentBinding
+import com.geekyouup.android.ustopwatch.manager.SoundManager
+import com.geekyouup.android.ustopwatch.manager.Sounds
 
 @SuppressLint("ClickableViewAccessibility")
 class StopwatchFragment : Fragment() {
     private lateinit var binding: StopwatchFragmentBinding
     private var mCurrentTimeMillis: Double = 0.0
-    private var mSoundManager: SoundManager? = null
     private var mRunningState: Boolean = false
     private var mLastSecond: Int = 0
-    val isRunning get() = binding.swview.isRunning
+    val isRunning get() = binding.stopwatchView.isRunning
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mSoundManager = SoundManager.getInstance(context)
         binding = StopwatchFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -53,10 +53,10 @@ class StopwatchFragment : Fragment() {
         binding.saveButton.setOnClickListener {
             if (isRunning) {
                 LapTimeRecorder.instance?.recordLapTime(
-                    binding.swview.watchTime,
-                    activity as UltimateStopwatchActivity?
+                    binding.stopwatchView.watchTime,
+                    activity as MainActivity?
                 )
-                mSoundManager!!.playSound(SoundManager.SOUND_LAP_TIME)
+                SoundManager.playSound(requireContext(), Sounds.SOUND_LAP_TIME)
             }
         }
     }
@@ -66,36 +66,36 @@ class StopwatchFragment : Fragment() {
         val settings = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val editor = settings.edit()
         editor.putBoolean(PREF_IS_RUNNING, mRunningState)
-        binding.swview.saveState(editor)
+        binding.stopwatchView.saveState(editor)
         editor.apply()
         try {
             if (isRunning && mCurrentTimeMillis > 0) {
-                AlarmUpdater.showChronometerNotification(activity, mCurrentTimeMillis.toLong())
+                AlarmUpdater.showChronometerNotification(requireContext(), mCurrentTimeMillis.toLong())
             }
         } catch (ignored: Exception) {
         }
-        binding.swview.stop()
+        binding.stopwatchView.stop()
     }
 
     override fun onResume() {
         super.onResume()
-        binding.swview.handler = object : Handler(Looper.getMainLooper()) {
+        binding.stopwatchView.handler = object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(m: Message) {
                 if (m.data.getBoolean(
-                        UltimateStopwatchActivity.MSG_UPDATE_COUNTER_TIME,
+                        MainActivity.MSG_UPDATE_COUNTER_TIME,
                         false
                     )
                 ) {
                     mCurrentTimeMillis =
-                        m.data.getDouble(UltimateStopwatchActivity.MSG_NEW_TIME_DOUBLE)
+                        m.data.getDouble(MainActivity.MSG_NEW_TIME_DOUBLE)
                     setTime(mCurrentTimeMillis)
                     val currentSecond = mCurrentTimeMillis.toInt() / 1000
                     if (currentSecond > mLastSecond) {
-                        mSoundManager!!.doTick()
+                        SoundManager.doTick(requireContext())
                     }
                     mLastSecond = currentSecond
                 } else if (m.data.getBoolean(
-                        UltimateStopwatchActivity.MSG_STATE_CHANGE,
+                        MainActivity.MSG_STATE_CHANGE,
                         false
                     )
                 ) {
@@ -106,8 +106,8 @@ class StopwatchFragment : Fragment() {
         AlarmUpdater.cancelChronometerNotification(activity)
         val settings = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         mRunningState = settings.getBoolean(PREF_IS_RUNNING, false)
-        binding.swview.restoreState(settings)
-        (activity as UltimateStopwatchActivity?)!!.registerStopwatchFragment(this)
+        binding.stopwatchView.restoreState(settings)
+        (activity as MainActivity?)!!.registerStopwatchFragment(this)
 
         //center the timer text in a fixed position, stops wiggling numbers
         val paint = Paint()
@@ -124,7 +124,7 @@ class StopwatchFragment : Fragment() {
     }
 
     private fun startStop() {
-        binding.swview.startStop()
+        binding.stopwatchView.startStop()
         setUIState()
     }
 
@@ -135,12 +135,12 @@ class StopwatchFragment : Fragment() {
         binding.saveButton.isEnabled = mRunningState || mCurrentTimeMillis != 0.0
         if (isAdded) binding.startButton.text =
             if (mRunningState) getString(R.string.pause) else getString(R.string.start)
-        if (stateChanged) mSoundManager!!.playSound(if (mRunningState) SoundManager.SOUND_START else SoundManager.SOUND_STOP)
+        if (stateChanged) SoundManager.playSound(requireContext(), if (mRunningState) Sounds.SOUND_START else Sounds.SOUND_STOP)
     }
 
     fun reset() {
-        binding.swview.setTime(0, 0, 0, true)
-        mSoundManager!!.playSound(SoundManager.SOUND_RESET)
+        binding.stopwatchView.setTime(0, 0, 0, true)
+        SoundManager.playSound(requireContext(), Sounds.SOUND_RESET)
         binding.resetButton.isEnabled = false
         binding.saveButton.isEnabled = false
         binding.startButton.text = getString(R.string.start)
