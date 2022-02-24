@@ -4,7 +4,7 @@
     <style name="Theme.Stopwatch" parent="@style/Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimaryVariant">@color/purple_500</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -12,6 +12,12 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">@color/purple_500</item>
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#F1F1F1</item>
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">#221F1F</item>
     </style>
     <style name="Theme.Stopwatch.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.Stopwatch.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

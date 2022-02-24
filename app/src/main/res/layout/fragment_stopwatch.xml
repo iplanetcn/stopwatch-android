@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        custom:layout_constraintGuide_end="8dp" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        custom:barrierDirection="top" />
+
+    <TextView
+        android:id="@+id/counter_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/default_time"
+        android:textColor="@color/text_grey"
+        android:textSize="@dimen/counter_font"
+        custom:layout_constraintEnd_toEndOf="parent"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintTop_toTopOf="parent" />
+
+    <com.cherry.android.stopwatch.view.StopwatchView
+        android:id="@+id/stopwatch_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_below="@id/counter_text"
+        custom:layout_constraintBottom_toTopOf="@+id/barrier"
+        custom:layout_constraintEnd_toEndOf="parent"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintTop_toBottomOf="@+id/counter_text"
+        custom:watchType="type_stopwatch" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/startButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/content_desc_start_sw"
+        android:fontFamily="sans-serif"
+        android:text="@string/start"
+
+        android:textSize="@dimen/bottom_bar_portrait_button_font_size"
+        custom:layout_constraintBottom_toBottomOf="@+id/guideline"
+        custom:layout_constraintEnd_toStartOf="@+id/resetButton"
+        custom:layout_constraintHorizontal_weight="3"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintTop_toBottomOf="@+id/barrier" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/resetButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/content_desc_reset"
+        android:fontFamily="sans-serif"
+        android:text="@string/reset"
+
+        android:textSize="@dimen/bottom_bar_portrait_button_font_size"
+        custom:layout_constraintBottom_toBottomOf="@+id/guideline"
+        custom:layout_constraintEnd_toStartOf="@+id/saveButton"
+        custom:layout_constraintHorizontal_weight="3"
+        custom:layout_constraintStart_toEndOf="@+id/startButton"
+        custom:layout_constraintTop_toBottomOf="@+id/barrier" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/content_desc_lap_time"
+        android:fontFamily="sans-serif"
+        android:text="@string/lap"
+
+        android:textSize="@dimen/bottom_bar_portrait_button_font_size"
+        custom:layout_constraintBottom_toBottomOf="@+id/guideline"
+        custom:layout_constraintEnd_toEndOf="parent"
+        custom:layout_constraintHorizontal_weight="2"
+        custom:layout_constraintStart_toEndOf="@+id/resetButton"
+        custom:layout_constraintTop_toBottomOf="@+id/barrier" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

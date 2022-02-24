@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.geekyouup.android.ustopwatch"
-    android:installLocation="auto"
-    android:versionCode="40"
-    android:versionName="6.0.5">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cherry.android.stopwatch"
+    android:installLocation="auto">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -24,10 +23,11 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
     <application
-        android:hardwareAccelerated="true"
         android:name=".App"
-        android:icon="@drawable/icon"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/Theme.Stopwatch">
         <activity
             android:name=".MainActivity"
@@ -41,7 +41,7 @@
 
         <activity
             android:name=".SettingsActivity"
-            android:icon="@drawable/icon" />
+            android:icon="@drawable/ic_stopwatch" />
 
         <service android:name=".AlarmUpdater$UpdateService" />
 
