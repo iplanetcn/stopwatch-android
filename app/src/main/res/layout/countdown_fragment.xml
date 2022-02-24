@@ -20,8 +20,8 @@
 
     <com.geekyouup.android.ustopwatch.fragments.StopwatchCustomView
         android:id="@+id/cdview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/time_counter"
         android:layout_marginBottom="45dp"
         custom:watchType="type_countdown" />

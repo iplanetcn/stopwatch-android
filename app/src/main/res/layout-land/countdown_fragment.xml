@@ -33,7 +33,6 @@
             android:layout_below="@id/time_counter"
             android:layout_centerInParent="true"
             android:layout_marginTop="10dp"
-            android:divider="@drawable/divider_vertical_grey"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:showDividers="middle">
@@ -44,7 +43,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/blue_button_landscape_bg_color"
                 android:fontFamily="sans-serif"
                 android:text="@string/start"
                 android:textColor="@drawable/blue_button_landscape_text_color"
@@ -56,7 +54,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/blue_button_landscape_bg_color"
                 android:fontFamily="sans-serif"
                 android:text="@string/reset"
                 android:textColor="@drawable/blue_button_landscape_text_color"

@@ -7,31 +7,32 @@ import android.content.res.Configuration
 import android.graphics.drawable.AnimationDrawable
 import android.media.AudioManager
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.ViewPager
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.geekyouup.android.ustopwatch.databinding.MainBinding
 import com.geekyouup.android.ustopwatch.fragments.CountdownFragment
 import com.geekyouup.android.ustopwatch.fragments.LapTimeRecorder
 import com.geekyouup.android.ustopwatch.fragments.LapTimesFragment
 import com.geekyouup.android.ustopwatch.fragments.StopwatchFragment
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.*
 
 class UltimateStopwatchActivity : AppCompatActivity() {
+    private lateinit var binding: MainBinding
     private var mPowerMan: PowerManager? = null
     private var mWakeLock: WakeLock? = null
     var lapTimeFragment: LapTimesFragment? = null
-        private set
     private var mCountdownFragment: CountdownFragment? = null
     private var mStopwatchFragment: StopwatchFragment? = null
     private var mSoundManager: SoundManager? = null
-    private var mViewPager: ViewPager? = null
-    private var mTabsAdapter: TabsAdapter? = null
     private var mMenu: Menu? = null
     private var mFlashResetIcon = false
 
@@ -40,28 +41,20 @@ class UltimateStopwatchActivity : AppCompatActivity() {
      */
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main)
+        binding = MainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
         window.setBackgroundDrawable(null)
-        if (supportActionBar != null) {
-            supportActionBar!!.setDisplayShowHomeEnabled(true)
-            supportActionBar!!.setIcon(R.drawable.icon_ab)
-        }
-        title = getString(R.string.app_name_caps)
+        title = getString(R.string.app_name)
         mSoundManager = SoundManager.getInstance(this)
-        mViewPager = findViewById(R.id.viewpager)
-        mViewPager?.offscreenPageLimit = 2
+        binding.viewpager.offscreenPageLimit = 2
         setupActionBar()
         mPowerMan = getSystemService(POWER_SERVICE) as PowerManager
         volumeControlStream = AudioManager.STREAM_MUSIC
-
-        // stop landscape on QVGA/HVGA
-        val screenSize =
-            resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+        val screenSize = resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
         if (screenSize == Configuration.SCREENLAYOUT_SIZE_SMALL) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
-
-        //If launched from Countdown notification then goto countdown clock directly
         if (intent != null && intent.getBooleanExtra(
                 AlarmUpdater.INTENT_EXTRA_LAUNCH_COUNTDOWN,
                 false
@@ -72,15 +65,54 @@ class UltimateStopwatchActivity : AppCompatActivity() {
     }
 
     private fun setupActionBar() {
-        val ab = supportActionBar
-        val tab1 = ab!!.newTab().setText(getString(R.string.stopwatch))
-        val tab2 = ab.newTab().setText(getString(R.string.laptimes))
-        val tab3 = ab.newTab().setText(getString(R.string.countdown))
-        ab.navigationMode = ActionBar.NAVIGATION_MODE_TABS
-        mTabsAdapter = TabsAdapter(this, mViewPager)
-        mTabsAdapter!!.addTab(tab1, StopwatchFragment::class.java, null)
-        mTabsAdapter!!.addTab(tab2, LapTimesFragment::class.java, null)
-        mTabsAdapter!!.addTab(tab3, CountdownFragment::class.java, null)
+        val titles = arrayListOf(
+            getString(R.string.stopwatch),
+            getString(R.string.lap_times),
+            getString(R.string.countdown)
+        )
+
+        val fragments = arrayListOf(
+            StopwatchFragment(),
+            LapTimesFragment(),
+            CountdownFragment()
+        )
+
+        val tab1 = binding.tabLayout.newTab().setText(titles[0])
+        val tab2 = binding.tabLayout.newTab().setText(titles[1])
+        val tab3 = binding.tabLayout.newTab().setText(titles[2])
+
+        binding.tabLayout.addTab(tab1)
+        binding.tabLayout.addTab(tab2)
+        binding.tabLayout.addTab(tab3)
+
+        binding.viewpager.adapter = object : FragmentStateAdapter(this) {
+            override fun getItemCount(): Int {
+                return fragments.size
+            }
+
+            override fun createFragment(position: Int): Fragment {
+                return fragments[position]
+            }
+        }
+
+        TabLayoutMediator(binding.tabLayout, binding.viewpager) { tab, position ->
+            tab.text = titles[position]
+        }.attach()
+
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                invalidateOptionsMenu()
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                /* no-op */
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                /* no-op */
+            }
+
+        })
     }
 
     override fun onPause() {
@@ -110,48 +142,40 @@ class UltimateStopwatchActivity : AppCompatActivity() {
         mWakeLock?.run { acquire() }
         val settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         mSoundManager!!.setAudioState(settings.getBoolean(KEY_AUDIO_STATE, true))
-        SettingsActivity.Companion.loadSettings(settings)
+        SettingsActivity.loadSettings(settings)
         if (mMenu != null) {
-            val audioButton = mMenu!!.findItem(R.id.menu_audiotoggle)
-            audioButton?.setIcon(if (SoundManager.isAudioOn) R.drawable.audio_on else R.drawable.audio_off)
+            val audioButton = mMenu!!.findItem(R.id.menu_audio_toggle)
+            audioButton?.setIcon(if (SoundManager.isAudioOn) R.drawable.ic_baseline_volume_up_24 else R.drawable.ic_baseline_volume_off_24)
         }
 
         //jump straight to countdown if it was only item left running
         val jumpToPage = settings.getInt(KEY_JUMP_TO_PAGE, -1)
         if (jumpToPage != -1) {
-            mViewPager!!.setCurrentItem(2, false)
+            binding.viewpager.setCurrentItem(2, false)
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         val inflater = menuInflater
-        when (mTabsAdapter?.currentTabNum) {
+        when (binding.tabLayout.selectedTabPosition) {
             1 -> inflater.inflate(R.menu.menu_laptimes, menu)
             2 -> {
                 inflater.inflate(R.menu.menu_countdown, menu)
                 if (mFlashResetIcon) //icon hint for set countdown time
                 {
-                    val item = menu.findItem(R.id.menu_resettime)
+                    val item = menu.findItem(R.id.menu_reset_time)
                     item.setActionView(R.layout.action_bar_settime_animation)
-                    val iv = item.actionView.findViewById<ImageView>(R.id.settime_imageview)
+                    val iv = item.actionView.findViewById<ImageView>(R.id.set_time_imageview)
                     (iv.drawable as AnimationDrawable).start()
 
-                    //remove the action provider again after 1sec
-                    object : AsyncTask<Void?, Int?, Void?>() {
-                        override fun doInBackground(vararg params: Void?): Void? {
-                            try {
-                                Thread.sleep(1000)
-                            } catch (ignored: InterruptedException) {
-                            }
-                            return null
+                    MainScope().launch {
+                        withContext(Dispatchers.Default) {
+                            delay(1000)
                         }
-
-                        override fun onPostExecute(result: Void?) {
-                            item.actionView = null
-                            mFlashResetIcon = false
-                        }
-                    }.execute(null as Void?)
+                        item.actionView = null
+                        mFlashResetIcon = false
+                    }
                 }
             }
             0 -> inflater.inflate(R.menu.menu_stopwatch, menu)
@@ -159,27 +183,27 @@ class UltimateStopwatchActivity : AppCompatActivity() {
         }
 
         //get audio icon and set correct variant
-        val audioButton = menu.findItem(R.id.menu_audiotoggle)
-        audioButton?.setIcon(if (SoundManager.isAudioOn) R.drawable.audio_on else R.drawable.audio_off)
+        val audioButton = menu.findItem(R.id.menu_audio_toggle)
+        audioButton?.setIcon(if (SoundManager.isAudioOn) R.drawable.ic_baseline_volume_up_24 else R.drawable.ic_baseline_volume_off_24)
         mMenu = menu
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_rateapp) {
+        if (item.itemId == R.id.menu_rate_app) {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(getString(R.string.play_store_uri))
             startActivity(intent)
-        } else if (item.itemId == R.id.menu_clearlaps) {
+        } else if (item.itemId == R.id.menu_clear_laps) {
             LapTimeRecorder.instance?.reset(this)
-        } else if (item.itemId == R.id.menu_resettime) {
+        } else if (item.itemId == R.id.menu_reset_time) {
             //get hold of countdown fragment and call reset, call back to here?
             if (mCountdownFragment != null) {
                 mCountdownFragment!!.requestTimeDialog()
             }
-        } else if (item.itemId == R.id.menu_audiotoggle) {
+        } else if (item.itemId == R.id.menu_audio_toggle) {
             mSoundManager!!.setAudioState(!SoundManager.isAudioOn)
-            item.setIcon(if (SoundManager.isAudioOn) R.drawable.audio_on else R.drawable.audio_off)
+            item.setIcon(if (SoundManager.isAudioOn) R.drawable.ic_baseline_volume_up_24 else R.drawable.ic_baseline_volume_off_24)
         } else if (item.itemId == R.id.menu_settings) {
             val intent = Intent(this, SettingsActivity::class.java)
             intent.data = Uri.parse(getString(R.string.play_store_uri))

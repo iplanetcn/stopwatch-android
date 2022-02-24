@@ -11,5 +11,4 @@ class LapTimeBlock {
     fun addLapTime(lapTime: Double) {
         lapTimes.add(lapTime)
     }
-
 }

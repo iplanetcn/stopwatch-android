@@ -128,7 +128,7 @@ object AlarmUpdater {
                 }
                 notification.flags = notification.flags or Notification.FLAG_SHOW_LIGHTS
                 notification.audioStreamType = AudioManager.STREAM_NOTIFICATION
-                //notification.sound= Uri.parse("android.resource://com.geekyouup.android.ustopwatch/" + R.raw.alarm);
+//                notification.sound= Uri.parse("android.resource://com.geekyouup.android.ustopwatch/" + R.raw.alarm)
             } catch (ignored: Exception) {
             }
             notification.defaults = notification.defaults or Notification.DEFAULT_ALL

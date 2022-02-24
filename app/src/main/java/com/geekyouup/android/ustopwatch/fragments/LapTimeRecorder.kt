@@ -5,13 +5,13 @@ import com.geekyouup.android.ustopwatch.UltimateStopwatchActivity
 
 class LapTimeRecorder {
     fun loadTimes(cxt: Context) {
-        val settings = cxt.getSharedPreferences(PREFS_NAME_LAPTIMES, Context.MODE_PRIVATE)
+        val settings = cxt.getSharedPreferences(PREFS_NAME_LAP_TIMES, Context.MODE_PRIVATE)
         if (settings != null) {
             var lapTimeNum = 0
             mLapTimes!!.clear()
             var lt = 0.0
             var prevZero = false
-            while (settings.getLong(KEY_LAPTIME_X + lapTimeNum, -1L).toDouble() != -1.0) {
+            while (settings.getLong(KEY_LAP_TIME_X + lapTimeNum, -1L).toDouble() != -1.0) {
                 lapTimeNum++
                 prevZero = if (lt == 0.0 && prevZero) {
                     continue
@@ -22,14 +22,14 @@ class LapTimeRecorder {
     }
 
     fun saveTimes(cxt: Context) {
-        val settings = cxt.getSharedPreferences(PREFS_NAME_LAPTIMES, Context.MODE_PRIVATE)
+        val settings = cxt.getSharedPreferences(PREFS_NAME_LAP_TIMES, Context.MODE_PRIVATE)
         if (settings != null) {
             val editor = settings.edit()
             if (editor != null) {
                 editor.clear()
                 if (mLapTimes != null && mLapTimes!!.size > 0) {
                     for (i in mLapTimes!!.indices) {
-                        editor.putLong(KEY_LAPTIME_X + i, mLapTimes!![i].toLong())
+                        editor.putLong(KEY_LAP_TIME_X + i, mLapTimes!![i].toLong())
                     }
                 }
                 editor.apply()
@@ -71,15 +71,15 @@ class LapTimeRecorder {
         }
 
     fun reset(activity: UltimateStopwatchActivity?) {
-        mLapTimes!!.clear()
-        val settings = activity!!.getSharedPreferences(PREFS_NAME_LAPTIMES, Context.MODE_PRIVATE)
-        val editor = settings.edit()
-        editor.clear()
-        editor.commit()
-        if (activity != null) {
-            val ltf = activity.lapTimeFragment
-            ltf?.lapTimesUpdated()
+        activity?.apply {
+            mLapTimes!!.clear()
+            activity.getSharedPreferences(PREFS_NAME_LAP_TIMES, Context.MODE_PRIVATE)
+                .edit()
+                .clear()
+                .apply()
+            activity.lapTimeFragment?.lapTimesUpdated()
         }
+
     }
 
     fun deleteLapTimes(positions: ArrayList<Int?>?, ltf: LapTimesFragment) {
@@ -87,13 +87,13 @@ class LapTimeRecorder {
         var timeNumber = 0
         val newLapTimes = ArrayList<Double>()
         for (i in 0 until numTimes) {
-            val laptime = mLapTimes!![i]
-            if (laptime == 0.0) {
+            val lapTime = mLapTimes!![i]
+            if (lapTime == 0.0) {
                 if (i == 0) continue  //skip if the first element is a 0
                 timeNumber++
             }
             if (!positions!!.contains(timeNumber)) {
-                newLapTimes.add(laptime)
+                newLapTimes.add(lapTime)
             }
         }
         mLapTimes = newLapTimes
@@ -102,14 +102,15 @@ class LapTimeRecorder {
 
     companion object {
         private var mLapTimes: ArrayList<Double>? = ArrayList()
-        private const val PREFS_NAME_LAPTIMES = "usw_prefs_laptimes"
-        private const val KEY_LAPTIME_X = "LAPTIME_"
+        private const val PREFS_NAME_LAP_TIMES = "usw_prefs_lap_times"
+        private const val KEY_LAP_TIME_X = "LAP_TIME_"
         private var mSelf: LapTimeRecorder? = null
 
-        //if a 0 laptime is stored then it is a reset signal and start of new block
         val instance: LapTimeRecorder?
             get() {
-                if (mSelf == null) mSelf = LapTimeRecorder()
+                if (mSelf == null) {
+                    mSelf = LapTimeRecorder()
+                }
                 return mSelf
             }
     }

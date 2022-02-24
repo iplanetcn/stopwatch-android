@@ -1,7 +1,6 @@
 package com.geekyouup.android.ustopwatch.fragments
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.AbsListView.MultiChoiceModeListener
@@ -11,7 +10,6 @@ import android.widget.ListView
 import androidx.fragment.app.ListFragment
 import com.geekyouup.android.ustopwatch.R
 import com.geekyouup.android.ustopwatch.UltimateStopwatchActivity
-import com.geekyouup.android.ustopwatch.databinding.LaptimeItemBinding
 import com.geekyouup.android.ustopwatch.databinding.LaptimesFragmentBinding
 
 class LapTimesFragment : ListFragment(), LapTimeListener {

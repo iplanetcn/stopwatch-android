@@ -1,11 +1,7 @@
 package com.geekyouup.android.ustopwatch
 
-import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
-import android.os.Vibrator
-import android.os.VibratorManager
 import androidx.appcompat.app.AppCompatActivity
 import com.geekyouup.android.ustopwatch.compat.compatVibrator
 import com.geekyouup.android.ustopwatch.databinding.SettingsBinding
@@ -20,36 +16,41 @@ class SettingsActivity : AppCompatActivity() {
         binding.settingsSecondsSound.setOnCheckedChangeListener { _, isChecked ->
             isTicking = isChecked
         }
+
         binding.settingsAnimations.setOnCheckedChangeListener { _, isChecked ->
             isAnimating = isChecked
         }
+
         binding.settingsEndlessAlert.setOnCheckedChangeListener { _, isChecked ->
             isEndlessAlarm = isChecked
         }
+
         binding.settingsVibrate.setOnCheckedChangeListener { _, isChecked ->
             isVibrate = isChecked
         }
+
         binding.settingsEndlessAlert.isChecked = isEndlessAlarm
         binding.settingsSecondsSound.isChecked = isTicking
         binding.settingsVibrate.isChecked = isVibrate
+
         if (!compatVibrator().hasVibrator()) {
             binding.settingsVibrate.isChecked = false
             binding.settingsVibrate.isEnabled = false
         }
+
         binding.settingsAnimations.isChecked = isAnimating
     }
 
 
     override fun onPause() {
         super.onPause()
-        val settings =
-            getSharedPreferences(UltimateStopwatchActivity.PREFS_NAME, MODE_PRIVATE)
-        val editor = settings.edit()
-        editor.putBoolean(KEY_TICKING, isTicking)
-        editor.putBoolean(KEY_ENDLESS_ALARM, isEndlessAlarm)
-        editor.putBoolean(KEY_VIBRATE, isVibrate)
-        editor.putBoolean(KEY_ANIMATING, isAnimating)
-        editor.apply()
+        getSharedPreferences(UltimateStopwatchActivity.PREFS_NAME, MODE_PRIVATE)
+            .edit()
+            .putBoolean(KEY_TICKING, isTicking)
+            .putBoolean(KEY_ENDLESS_ALARM, isEndlessAlarm)
+            .putBoolean(KEY_VIBRATE, isVibrate)
+            .putBoolean(KEY_ANIMATING, isAnimating)
+            .apply()
     }
 
     companion object {

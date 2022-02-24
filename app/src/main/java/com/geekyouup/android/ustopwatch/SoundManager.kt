@@ -69,8 +69,7 @@ class SoundManager private constructor(private val mContext: Context?) {
     init {
         soundPoolMap[SOUND_COUNTDOWN_ALARM] = soundPool.load(mContext, R.raw.countdown_alarm, 1)
         soundPoolMap[SOUND_LAP_TIME] = soundPool.load(mContext, R.raw.lap_time, 1)
-        soundPoolMap[SOUND_RESET] =
-            soundPool.load(mContext, R.raw.reset_watch, 1)
+        soundPoolMap[SOUND_RESET] = soundPool.load(mContext, R.raw.reset_watch, 1)
         soundPoolMap[SOUND_START] = soundPool.load(mContext, R.raw.start, 1)
         soundPoolMap[SOUND_STOP] = soundPool.load(mContext, R.raw.stop, 1)
         soundPoolMap[SOUND_TICK] = soundPool.load(mContext, R.raw.tok_repeatit, 2)

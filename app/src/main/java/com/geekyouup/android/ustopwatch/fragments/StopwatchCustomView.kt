@@ -4,19 +4,16 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
-import android.os.Vibrator
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import com.geekyouup.android.ustopwatch.*
@@ -64,55 +61,63 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
         val options = BitmapFactory.Options()
         options.inScaled = false
         val handsScaleFactor: Double
-        if (minDim >= 1000) {
-            mBackgroundImage = BitmapFactory.decodeResource(
-                res,
-                if (mIsStopwatch) R.drawable.background1000 else R.drawable.background1000_cd,
-                options
-            )
-            handsScaleFactor = 1.388
-        } else if (minDim >= 720) {
-            mBackgroundImage = BitmapFactory.decodeResource(
-                res,
-                if (mIsStopwatch) R.drawable.background720 else R.drawable.background720_cd,
-                options
-            )
-            handsScaleFactor = 1.0
-        } else if (minDim >= 590) {
-            mBackgroundImage = BitmapFactory.decodeResource(
-                res,
-                if (mIsStopwatch) R.drawable.background590 else R.drawable.background590_cd,
-                options
-            )
-            handsScaleFactor = 0.82
-        } else if (minDim >= 460) {
-            mBackgroundImage = BitmapFactory.decodeResource(
-                res,
-                if (mIsStopwatch) R.drawable.background460 else R.drawable.background460_cd,
-                options
-            )
-            handsScaleFactor = 0.64
-        } else if (minDim >= 320) {
-            mBackgroundImage = BitmapFactory.decodeResource(
-                res,
-                if (mIsStopwatch) R.drawable.background320 else R.drawable.background320_cd,
-                options
-            )
-            handsScaleFactor = 0.444
-        } else if (minDim >= 240) {
-            mBackgroundImage = BitmapFactory.decodeResource(
-                res,
-                if (mIsStopwatch) R.drawable.background240 else R.drawable.background240_cd,
-                options
-            )
-            handsScaleFactor = 0.333
-        } else {
-            mBackgroundImage = BitmapFactory.decodeResource(
-                res,
-                if (mIsStopwatch) R.drawable.background150 else R.drawable.background150_cd,
-                options
-            )
-            handsScaleFactor = 0.208
+        when {
+            minDim >= 1000 -> {
+                mBackgroundImage = BitmapFactory.decodeResource(
+                    res,
+                    if (mIsStopwatch) R.drawable.background1000 else R.drawable.background1000_cd,
+                    options
+                )
+                handsScaleFactor = 1.388
+            }
+            minDim >= 720 -> {
+                mBackgroundImage = BitmapFactory.decodeResource(
+                    res,
+                    if (mIsStopwatch) R.drawable.background720 else R.drawable.background720_cd,
+                    options
+                )
+                handsScaleFactor = 1.0
+            }
+            minDim >= 590 -> {
+                mBackgroundImage = BitmapFactory.decodeResource(
+                    res,
+                    if (mIsStopwatch) R.drawable.background590 else R.drawable.background590_cd,
+                    options
+                )
+                handsScaleFactor = 0.82
+            }
+            minDim >= 460 -> {
+                mBackgroundImage = BitmapFactory.decodeResource(
+                    res,
+                    if (mIsStopwatch) R.drawable.background460 else R.drawable.background460_cd,
+                    options
+                )
+                handsScaleFactor = 0.64
+            }
+            minDim >= 320 -> {
+                mBackgroundImage = BitmapFactory.decodeResource(
+                    res,
+                    if (mIsStopwatch) R.drawable.background320 else R.drawable.background320_cd,
+                    options
+                )
+                handsScaleFactor = 0.444
+            }
+            minDim >= 240 -> {
+                mBackgroundImage = BitmapFactory.decodeResource(
+                    res,
+                    if (mIsStopwatch) R.drawable.background240 else R.drawable.background240_cd,
+                    options
+                )
+                handsScaleFactor = 0.333
+            }
+            else -> {
+                mBackgroundImage = BitmapFactory.decodeResource(
+                    res,
+                    if (mIsStopwatch) R.drawable.background150 else R.drawable.background150_cd,
+                    options
+                )
+                handsScaleFactor = 0.208
+            }
         }
 
         mSecHand = ResourcesCompat.getDrawable(
@@ -238,7 +243,7 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
         minsAnimation.duration = duration.toLong()
         minsAnimation.start()
         val clockAnimation = ValueAnimator.ofInt(
-            mDisplayTimeMillis.toInt(),
+            mDisplayTimeMillis,
             hours * 3600000 + minutes * 60000 + seconds * 1000
         )
         clockAnimation.interpolator = AccelerateDecelerateInterpolator()
@@ -322,8 +327,8 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
         }
 
         // mins is 0 to 30
-        mMinsAngle = twoPI * (mDisplayTimeMillis / 1800000.0f).toFloat()
-        mSecsAngle = twoPI * (mDisplayTimeMillis / 60000.0f).toFloat()
+        mMinsAngle = twoPI * (mDisplayTimeMillis / 1800000.0f)
+        mSecsAngle = twoPI * (mDisplayTimeMillis / 60000.0f)
         if (mDisplayTimeMillis < 0) mDisplayTimeMillis = 0
 
         // send the time back to the Activity to update the other views
@@ -407,10 +412,10 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
                 AlarmUpdater.cancelCountdownAlarm(context) //just to be sure
             }
             map.putBoolean(KEY_STATE + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX, isRunning)
-            map.putLong(KEY_LASTTIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX, mLastTime)
+            map.putLong(KEY_LAST_TIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX, mLastTime)
             map.putInt(
-                KEY_NOWTIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX,
-                mDisplayTimeMillis.toInt()
+                KEY_NOW_TIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX,
+                mDisplayTimeMillis
             )
         } else {
             map.clear()
@@ -430,10 +435,11 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
                 false
             )
             mLastTime = savedState.getLong(
-                KEY_LASTTIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX,
+                KEY_LAST_TIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX,
                 System.currentTimeMillis()
             )
-            mDisplayTimeMillis = savedState.getInt(KEY_NOWTIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX, 0)
+            mDisplayTimeMillis =
+                savedState.getInt(KEY_NOW_TIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX, 0)
             updateWatchState(true)
             removeCallbacks(animator)
             if (isRunning) post(animator)
@@ -489,14 +495,14 @@ class StopwatchCustomView(context: Context, attrs: AttributeSet?) : View(context
 
     companion object {
         private const val KEY_STATE = "state_bool"
-        private const val KEY_LASTTIME = "lasttime"
-        private const val KEY_NOWTIME = "currenttime_int"
+        private const val KEY_LAST_TIME = "last_time"
+        private const val KEY_NOW_TIME = "current_time_int"
         private const val KEY_COUNTDOWN_SUFFIX = "_cd"
     }
 
     init {
 
-        //find out if this view is specificed as a stopwatch or countdown view
+        //find out if this view is specified as a stopwatch or countdown view
         val a = context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.StopwatchCustomView,

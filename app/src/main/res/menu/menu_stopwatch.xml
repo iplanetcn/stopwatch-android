@@ -2,16 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_rateapp"
-        android:title="@string/rateapp"
+        android:id="@+id/menu_rate_app"
+        android:title="@string/rate_app"
         app:showAsAction="never" />
     <item
         android:id="@+id/menu_settings"
         android:title="@string/settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/menu_audiotoggle"
-        android:icon="@drawable/audio_on"
-        android:title="Audio Toggle"
-        app:showAsAction="always" />
+        android:id="@+id/menu_audio_toggle"
+        android:icon="@drawable/ic_baseline_volume_up_24"
+        android:title="@string/audio_toggle"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_clearlaps"
-        app:showAsAction="never"
-        android:title="@string/clearlaps" />
+        android:id="@+id/menu_clear_laps"
+        android:title="@string/clear_all_laps"
+        app:showAsAction="never" />
     <item
-        android:id="@+id/menu_rateapp"
-        app:showAsAction="never"
-        android:title="@string/rateapp" />
+        android:id="@+id/menu_rate_app"
+        android:title="@string/rate_app"
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_settings"
-        app:showAsAction="never"
-        android:title="@string/settings" />
+        android:title="@string/settings"
+        app:showAsAction="never" />
     <item
-        android:id="@+id/menu_audiotoggle"
-        app:showAsAction="always"
-        android:icon="@drawable/audio_on"
-        android:title="Audio Toggle" />
+        android:id="@+id/menu_audio_toggle"
+        android:icon="@drawable/ic_baseline_volume_up_24"
+        android:title="@string/audio_toggle"
+        app:showAsAction="ifRoom" />
 </menu>
