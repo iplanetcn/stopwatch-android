@@ -412,7 +412,7 @@ class StopwatchView(context: Context, attrs: AttributeSet?) : View(context, attr
             if (!mIsStopwatch && mDisplayTimeMillis > 0 && isRunning) {
                 AlarmUpdater.setCountdownAlarm(context, mDisplayTimeMillis.toLong())
             } else {
-                AlarmUpdater.cancelCountdownAlarm(context) //just to be sure
+                AlarmUpdater.cancelCountdownAlarm(context)
             }
             map.putBoolean(KEY_STATE + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX, isRunning)
             map.putLong(KEY_LAST_TIME + if (mStopwatchMode) "" else KEY_COUNTDOWN_SUFFIX, mLastTime)

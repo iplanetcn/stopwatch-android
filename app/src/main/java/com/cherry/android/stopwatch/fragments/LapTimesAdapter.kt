@@ -1,9 +1,13 @@
 package com.cherry.android.stopwatch.fragments
 
+import android.annotation.SuppressLint
+import android.util.SparseBooleanArray
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.util.remove
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 import com.cherry.android.stopwatch.databinding.ItemLapTimeBinding
 import com.cherry.android.stopwatch.databinding.ItemLapTimesBinding
 import com.cherry.android.stopwatch.utils.TimeUtils
@@ -13,7 +17,9 @@ class LapTimesAdapter(
     private val onRowClicked: ((position: Int) -> Unit)? = null,
     private val onRowLongClicked: ((position: Int) -> Unit)? = null
 ) : RecyclerView.Adapter<LapTimesAdapter.LapTimesViewHolder>() {
-    private val selectedItems = mutableListOf<Int>()
+    private val selectedItems = SparseBooleanArray()
+    private var currentSelectedIndex = NO_POSITION
+    private var isActionMode = false
 
     //region Implementations
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LapTimesViewHolder {
@@ -28,6 +34,7 @@ class LapTimesAdapter(
 
     override fun onBindViewHolder(holder: LapTimesViewHolder, position: Int) {
         holder.bindData(data[position])
+        holder.binding.root.isActivated = selectedItems.get(position, false)
         holder.binding.root.setOnClickListener {
             onRowClicked?.apply {
                 invoke(position)
@@ -49,28 +56,53 @@ class LapTimesAdapter(
         return data.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun selectAll() {
-
+        for (i in 0 until itemCount) selectedItems.put(i, true)
+        notifyDataSetChanged()
     }
 
     fun getSelectedItemCount(): Int {
-        return 0
+        return selectedItems.size()
     }
 
     fun toggleSelection(position: Int) {
+        currentSelectedIndex = position
+        if (selectedItems.get(position, false)) {
+            selectedItems.delete(position)
+        } else {
+            selectedItems.put(position, true)
+        }
 
+        isActionMode = true
+        notifyItemChanged(position)
     }
 
-    fun getSelectedItems(): List<Int> {
-        return selectedItems
+    fun getSelectedItems(): ArrayList<Int> {
+        val items = ArrayList<Int>()
+        for (i in 0 until selectedItems.size()) {
+            items.add(selectedItems.keyAt(i))
+        }
+        return items
     }
 
     fun removeData(position: Int) {
-
+        data.removeAt(position)
+        selectedItems.remove(position, false)
+        resetCurrentIndex()
     }
 
-    fun removeSelection() {
+    private fun resetCurrentIndex() {
+        currentSelectedIndex = NO_POSITION
+        isActionMode = false
+    }
 
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun removeSelection() {
+        selectedItems.clear()
+        resetCurrentIndex()
+        notifyDataSetChanged()
     }
     //endregion
 

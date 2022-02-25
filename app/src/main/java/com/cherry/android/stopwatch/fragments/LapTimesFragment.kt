@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cherry.android.stopwatch.MainActivity
 import com.cherry.android.stopwatch.R
@@ -27,8 +26,8 @@ class LapTimesFragment : Fragment(), LapTimeListener {
         }
 
         override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-            menu.findItem(R.id.menu_context_select_all).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-            menu.findItem(R.id.menu_context_delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            menu.findItem(R.id.menu_context_select_all).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+            menu.findItem(R.id.menu_context_delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
             return true
         }
 
@@ -36,10 +35,11 @@ class LapTimesFragment : Fragment(), LapTimeListener {
             return when (item.itemId) {
                 R.id.menu_context_select_all -> {
                     selectAll()
-                    return true
+                    true
                 }
                 R.id.menu_context_delete -> {
-                    deleteRows()
+                    deleteSelection()
+                    mode.finish()
                     true
                 }
                 else -> {
@@ -72,12 +72,6 @@ class LapTimesFragment : Fragment(), LapTimeListener {
         binding.recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.setHasFixedSize(true)
-        binding.recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                LinearLayoutManager.VERTICAL
-            )
-        )
         binding.recyclerView.itemAnimator = DefaultItemAnimator()
         (activity as MainActivity?)!!.registerLapTimeFragment(this)
     }
@@ -105,11 +99,11 @@ class LapTimesFragment : Fragment(), LapTimeListener {
         val count: Int = adapter.getSelectedItemCount()
 
         if (count == 0) {
-            actionMode!!.finish()
+            actionMode?.finish()
             actionMode = null
         } else {
-            actionMode!!.title = count.toString()
-            actionMode!!.invalidate()
+            actionMode?.title = count.toString()
+            actionMode?.invalidate()
         }
     }
 
@@ -118,19 +112,22 @@ class LapTimesFragment : Fragment(), LapTimeListener {
         val count: Int = adapter.getSelectedItemCount()
 
         if (count == 0) {
-            actionMode!!.finish()
+            actionMode?.finish()
         } else {
-            actionMode!!.title = count.toString()
-            actionMode!!.invalidate()
+            actionMode?.title = count.toString()
+            actionMode?.invalidate()
         }
 
         actionMode = null
     }
 
-    private fun deleteRows() {
-        val selectedItemPositions: List<Int> = adapter.getSelectedItems()
-        for (i in selectedItemPositions.indices.reversed()) {
-            adapter.removeData(selectedItemPositions[i])
+    private fun deleteSelection() {
+        val selectedItemPositions: ArrayList<Int> = adapter.getSelectedItems()
+        if (selectedItemPositions.isNotEmpty()) {
+            for (i in selectedItemPositions.indices.reversed()) {
+                adapter.removeData(selectedItemPositions[i])
+            }
+            LapTimeRecorder.deleteLapTimes(selectedItemPositions, this@LapTimesFragment)
         }
         notifyDataSetChanged()
         actionMode = null
