@@ -45,7 +45,6 @@ class StopwatchFragment : Fragment() {
         binding.startButton.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 startStop()
-                return@setOnTouchListener false
             }
             false
         }
