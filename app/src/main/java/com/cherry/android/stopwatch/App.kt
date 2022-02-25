@@ -2,6 +2,7 @@ package com.cherry.android.stopwatch
 
 import android.app.Application
 import com.cherry.android.stopwatch.manager.SoundManager
+import timber.log.Timber
 
 /**
  * App
@@ -14,5 +15,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         SoundManager.init(this)
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
 }

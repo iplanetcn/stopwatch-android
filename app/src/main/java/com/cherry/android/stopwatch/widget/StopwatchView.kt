@@ -1,4 +1,4 @@
-package com.cherry.android.stopwatch.view
+package com.cherry.android.stopwatch.widget
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint

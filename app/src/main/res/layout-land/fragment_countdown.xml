@@ -63,7 +63,7 @@
         app:layout_constraintStart_toEndOf="@+id/startButton"
         app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal" />
 
-    <com.cherry.android.stopwatch.view.StopwatchView
+    <com.cherry.android.stopwatch.widget.StopwatchView
         android:id="@+id/countdown_watch_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

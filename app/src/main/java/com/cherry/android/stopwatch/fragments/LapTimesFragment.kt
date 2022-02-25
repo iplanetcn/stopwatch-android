@@ -3,9 +3,8 @@ package com.cherry.android.stopwatch.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.view.ActionMode
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +12,7 @@ import com.cherry.android.stopwatch.MainActivity
 import com.cherry.android.stopwatch.R
 import com.cherry.android.stopwatch.databinding.FragmentLapTimesBinding
 import com.cherry.android.stopwatch.utils.LapTimeRecorder
+import timber.log.Timber
 
 class LapTimesFragment : Fragment(), LapTimeListener {
     private var lapTimes: ArrayList<LapTimeBlock> = ArrayList()
@@ -26,7 +26,8 @@ class LapTimesFragment : Fragment(), LapTimeListener {
         }
 
         override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-            menu.findItem(R.id.menu_context_select_all).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+            menu.findItem(R.id.menu_context_select_all)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
             menu.findItem(R.id.menu_context_delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
             return true
         }
@@ -77,12 +78,14 @@ class LapTimesFragment : Fragment(), LapTimeListener {
     }
 
     private val onRowClicked: (position: Int) -> Unit = { position ->
-        Toast.makeText(requireContext(), "click: $position", Toast.LENGTH_SHORT).show()
-        enableActionMode(position)
+        Timber.d("click: $position")
+        if (actionMode != null) {
+            toggleSelection(position)
+        }
     }
 
     private val onRowLongClicked: (position: Int) -> Unit = { position ->
-        Toast.makeText(requireContext(), "longClick: $position", Toast.LENGTH_SHORT).show()
+        Timber.d("longClick: $position")
         enableActionMode(position)
     }
 
