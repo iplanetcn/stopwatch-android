@@ -1,124 +1,162 @@
 package com.cherry.android.stopwatch.fragments
 
-import android.graphics.Color
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import android.widget.AbsListView.MultiChoiceModeListener
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemLongClickListener
-import android.widget.ListView
-import androidx.fragment.app.ListFragment
-import com.cherry.android.stopwatch.R
+import androidx.appcompat.view.ActionMode
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cherry.android.stopwatch.MainActivity
+import com.cherry.android.stopwatch.R
 import com.cherry.android.stopwatch.databinding.FragmentLapTimesBinding
 import com.cherry.android.stopwatch.utils.LapTimeRecorder
 
-class LapTimesFragment : ListFragment(), LapTimeListener {
-    private var mLapTimes: ArrayList<LapTimeBlock> = ArrayList()
-    private var mCheckedItems: ArrayList<Int> = ArrayList()
-    private lateinit var mAdapter: LapTimesBaseAdapter
+class LapTimesFragment : Fragment(), LapTimeListener {
+    private var lapTimes: ArrayList<LapTimeBlock> = ArrayList()
+    private lateinit var adapter: LapTimesAdapter
+    private lateinit var binding: FragmentLapTimesBinding
+    private var actionMode: ActionMode? = null
+    private val actionModeCallback = object : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+            mode.menuInflater.inflate(R.menu.menu_laptimes_contextual, menu)
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+            menu.findItem(R.id.menu_context_select_all).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            menu.findItem(R.id.menu_context_delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            return true
+        }
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            return when (item.itemId) {
+                R.id.menu_context_select_all -> {
+                    selectAll()
+                    return true
+                }
+                R.id.menu_context_delete -> {
+                    deleteRows()
+                    true
+                }
+                else -> {
+                    mode.finish()
+                    false
+                }
+            }
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode) {
+            adapter.removeSelection()
+            actionMode = null
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return FragmentLapTimesBinding.inflate(layoutInflater, container, false).root
+        binding = FragmentLapTimesBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        val ltf = this
-        val listView = listView
-        listView.cacheColorHint = Color.WHITE
-        listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
-
-        listView.setMultiChoiceModeListener(object : MultiChoiceModeListener {
-            override fun onItemCheckedStateChanged(
-                actionMode: ActionMode,
-                i: Int,
-                l: Long,
-                checked: Boolean
-            ) {
-                if (checked) {
-                    mCheckedItems.add(i)
-                } else {
-                    mCheckedItems.remove(i)
-                }
-            }
-
-            override fun onCreateActionMode(actionMode: ActionMode, menu: Menu): Boolean {
-                val inflater = actionMode.menuInflater
-                inflater.inflate(R.menu.menu_laptimes_contextual, menu)
-                return true
-            }
-
-            override fun onPrepareActionMode(actionMode: ActionMode, menu: Menu): Boolean {
-                return false
-            }
-
-            override fun onActionItemClicked(
-                actionMode: ActionMode,
-                menuItem: MenuItem
-            ): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.menu_context_delete -> {
-                        LapTimeRecorder.deleteLapTimes(mCheckedItems, ltf)
-                        actionMode.finish() // Action picked, so close the CAB
-                        mCheckedItems.clear()
-                        true
-                    }
-                    else -> false
-                }
-            }
-
-            override fun onDestroyActionMode(actionMode: ActionMode) {}
-        })
-        mAdapter = LapTimesBaseAdapter(requireActivity(), mLapTimes)
-        listAdapter = mAdapter
+        adapter = LapTimesAdapter(lapTimes, onRowClicked, onRowLongClicked)
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                LinearLayoutManager.VERTICAL
+            )
+        )
+        binding.recyclerView.itemAnimator = DefaultItemAnimator()
         (activity as MainActivity?)!!.registerLapTimeFragment(this)
+    }
 
-        //on long touch start the contextual actionbar
-        getListView().onItemLongClickListener =
-            OnItemLongClickListener { _: AdapterView<*>?, _: View?, _: Int, _: Long ->
-                requireActivity().startActionMode(object : ActionMode.Callback {
-                    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-                        return false
-                    }
+    private val onRowClicked: (position: Int) -> Unit = { position ->
+        Toast.makeText(requireContext(), "click: $position", Toast.LENGTH_SHORT).show()
+        enableActionMode(position)
+    }
 
-                    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-                        return false
-                    }
+    private val onRowLongClicked: (position: Int) -> Unit = { position ->
+        Toast.makeText(requireContext(), "longClick: $position", Toast.LENGTH_SHORT).show()
+        enableActionMode(position)
+    }
 
-                    override fun onDestroyActionMode(mode: ActionMode) {}
-                    override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-                        return false
-                    }
-                })
-                true
-            }
+    private fun enableActionMode(position: Int) {
+        if (actionMode == null) {
+            val requireActivity = requireActivity() as AppCompatActivity
+            actionMode = requireActivity.startSupportActionMode(actionModeCallback)
+        }
+        toggleSelection(position)
+    }
+
+    private fun toggleSelection(position: Int) {
+        adapter.toggleSelection(position)
+        val count: Int = adapter.getSelectedItemCount()
+
+        if (count == 0) {
+            actionMode!!.finish()
+            actionMode = null
+        } else {
+            actionMode!!.title = count.toString()
+            actionMode!!.invalidate()
+        }
+    }
+
+    private fun selectAll() {
+        adapter.selectAll()
+        val count: Int = adapter.getSelectedItemCount()
+
+        if (count == 0) {
+            actionMode!!.finish()
+        } else {
+            actionMode!!.title = count.toString()
+            actionMode!!.invalidate()
+        }
+
+        actionMode = null
+    }
+
+    private fun deleteRows() {
+        val selectedItemPositions: List<Int> = adapter.getSelectedItems()
+        for (i in selectedItemPositions.indices.reversed()) {
+            adapter.removeData(selectedItemPositions[i])
+        }
+        notifyDataSetChanged()
+        actionMode = null
     }
 
 
     override fun onResume() {
         super.onResume()
-        mLapTimes.clear()
-        mLapTimes.addAll(LapTimeRecorder.times)
-        mAdapter.notifyDataSetChanged()
+        lapTimes.clear()
+        lapTimes.addAll(LapTimeRecorder.times)
+        notifyDataSetChanged()
     }
 
     fun reset() {
-        mLapTimes.clear()
-        mAdapter.notifyDataSetChanged()
+        lapTimes.clear()
+        notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun notifyDataSetChanged() {
-        mAdapter.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()
     }
 
     override fun lapTimesUpdated() {
-        mLapTimes.clear()
-        mLapTimes.addAll(LapTimeRecorder.times)
+        lapTimes.clear()
+        lapTimes.addAll(LapTimeRecorder.times)
         notifyDataSetChanged()
     }
 }

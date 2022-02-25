@@ -43,7 +43,7 @@
             android:name=".SettingsActivity"
             android:icon="@drawable/ic_stopwatch" />
 
-        <service android:name=".utils.AlarmUpdater$UpdateService" />
+        <service android:name="com.cherry.android.stopwatch.utils.AlarmUpdater$UpdateService" />
 
     </application>
 </manifest> 

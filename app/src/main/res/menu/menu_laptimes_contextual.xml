@@ -6,4 +6,10 @@
         android:title="@string/delete"
         android:icon="@drawable/ic_baseline_delete_24"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_context_select_all"
+        android:title="@string/delete"
+        android:icon="@drawable/ic_baseline_done_all_24"
+        app:showAsAction="ifRoom" />
 </menu>

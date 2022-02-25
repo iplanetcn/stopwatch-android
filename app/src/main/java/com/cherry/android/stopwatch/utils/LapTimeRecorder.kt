@@ -7,7 +7,7 @@ import com.cherry.android.stopwatch.fragments.LapTimesFragment
 
 object LapTimeRecorder {
     private val mLapTimes: ArrayList<Double> = ArrayList()
-    private const val PREFS_NAME_LAP_TIMES = "usw_prefs_lap_times"
+    private const val PREFS_NAME_LAP_TIMES = "stopwatch_prefs_lap_times"
     private const val KEY_LAP_TIME_X = "LAP_TIME_"
 
     fun loadTimes(cxt: Context) {
@@ -96,7 +96,7 @@ object LapTimeRecorder {
         for (i in 0 until numTimes) {
             val lapTime = mLapTimes[i]
             if (lapTime == 0.0) {
-                if (i == 0) continue  //skip if the first element is a 0
+                if (i == 0) continue
                 timeNumber++
             }
             if (!positions.contains(timeNumber)) {

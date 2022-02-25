@@ -82,7 +82,7 @@ class CountdownFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         // cancel next alarm if there is one, and clear notification bar
-        AlarmUpdater.cancelCountdownAlarm(activity)
+        AlarmUpdater.cancelCountdownAlarm(requireContext())
         binding.countdownWatchView.handler = object : Handler(Looper.myLooper()!!) {
             override fun handleMessage(m: Message) {
                 when {

@@ -97,19 +97,18 @@ class StopwatchFragment : Fragment() {
                 }
             }
         }
-        AlarmUpdater.cancelChronometerNotification(activity)
+        AlarmUpdater.cancelChronometerNotification(requireContext())
         val settings = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         mRunningState = settings.getBoolean(PREF_IS_RUNNING, false)
         binding.stopwatchView.restoreState(settings)
         (activity as MainActivity?)!!.registerStopwatchFragment(this)
 
-        //center the timer text in a fixed position, stops wiggling numbers
+        // center the timer text in a fixed position, stops wiggling numbers
         val paint = Paint()
         val bounds = Rect()
-        paint.typeface = Typeface.SANS_SERIF // your preference here
-        paint.textSize =
-            resources.getDimension(R.dimen.counter_font) // have this the same as your text size
-        val counterText = getString(R.string.default_time) //00:00:00.000
+        paint.typeface = Typeface.SANS_SERIF
+        paint.textSize = resources.getDimension(R.dimen.counter_font)
+        val counterText = getString(R.string.default_time)
         paint.getTextBounds(counterText, 0, counterText.length, bounds)
         val textWidth = bounds.width()
         var width = resources.displayMetrics.widthPixels
