@@ -52,11 +52,10 @@ object SoundManager {
     }
 
     fun stopEndlessAlarm() {
-        try {
-            if (mLoopingSoundId != -1) soundPool.stop(mLoopingSoundId)
-            mLoopingSoundId = -1
-        } catch (ignored: Exception) {
+        if (mLoopingSoundId != -1) {
+            soundPool.stop(mLoopingSoundId)
         }
+        mLoopingSoundId = -1
     }
 
     fun doTick(context: Context) {

@@ -20,6 +20,7 @@ import com.cherry.android.stopwatch.*
 import com.cherry.android.stopwatch.compat.startVibrate
 import com.cherry.android.stopwatch.fragments.CountdownFragment
 import com.cherry.android.stopwatch.manager.SoundManager
+import com.cherry.android.stopwatch.utils.AlarmUpdater
 import kotlin.math.abs
 
 class StopwatchView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
@@ -505,17 +506,9 @@ class StopwatchView(context: Context, attrs: AttributeSet?) : View(context, attr
     }
 
     init {
-        //find out if this view is specified as a stopwatch or countdown view
-        val a = context.theme.obtainStyledAttributes(
-            attrs,
-            R.styleable.StopwatchView,
-            0, 0
-        )
-        mIsStopwatch = try {
-            a.getBoolean(R.styleable.StopwatchView_watchType, true)
-        } finally {
-            a.recycle()
-        }
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.StopwatchView, 0, 0)
+        mIsStopwatch = a.getBoolean(R.styleable.StopwatchView_watchType, true)
+        a.recycle()
         init()
     }
 }

@@ -1,9 +1,10 @@
-package com.cherry.android.stopwatch
+package com.cherry.android.stopwatch.utils
 
 import android.content.Context
 import android.text.SpannableString
 import android.text.style.TextAppearanceSpan
 import android.util.Log
+import com.cherry.android.stopwatch.R
 import kotlin.math.floor
 
 object TimeUtils {

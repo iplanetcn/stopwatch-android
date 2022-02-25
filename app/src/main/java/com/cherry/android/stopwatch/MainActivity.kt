@@ -18,10 +18,11 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.cherry.android.stopwatch.databinding.ActivityMainBinding
 import com.cherry.android.stopwatch.fragments.CountdownFragment
-import com.cherry.android.stopwatch.fragments.LapTimeRecorder
+import com.cherry.android.stopwatch.utils.LapTimeRecorder
 import com.cherry.android.stopwatch.fragments.LapTimesFragment
 import com.cherry.android.stopwatch.fragments.StopwatchFragment
 import com.cherry.android.stopwatch.manager.SoundManager
+import com.cherry.android.stopwatch.utils.AlarmUpdater
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.*
@@ -133,13 +134,13 @@ class MainActivity : AppCompatActivity() {
             editor.putInt(KEY_JUMP_TO_PAGE, -1)
         }
         editor.apply()
-        LapTimeRecorder.instance?.saveTimes(this)
+        LapTimeRecorder.saveTimes(this)
     }
 
     @SuppressLint("InvalidWakeLockTag")
     override fun onResume() {
         super.onResume()
-        LapTimeRecorder.instance?.loadTimes(this)
+        LapTimeRecorder.loadTimes(this)
         @Suppress("DEPRECATION")
         mWakeLock = mPowerMan!!.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, WAKE_LOCK_KEY)
         mWakeLock?.apply { acquire(10*60*1000L /*10 minutes*/) }
@@ -198,7 +199,7 @@ class MainActivity : AppCompatActivity() {
             intent.data = Uri.parse(getString(R.string.play_store_uri))
             startActivity(intent)
         } else if (item.itemId == R.id.menu_clear_laps) {
-            LapTimeRecorder.instance?.reset(this)
+            LapTimeRecorder.reset(this)
         } else if (item.itemId == R.id.menu_reset_time) {
             //get hold of countdown fragment and call reset, call back to here?
             if (mCountdownFragment != null) {

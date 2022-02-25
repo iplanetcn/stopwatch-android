@@ -62,9 +62,9 @@ class SettingsActivity : AppCompatActivity() {
             private set
         var isEndlessAlarm = false
             private set
-        var isVibrate = true
+        var isVibrate = false
             private set
-        var isAnimating = true
+        var isAnimating = false
             private set
         private const val KEY_TICKING = "key_ticking_on"
         private const val KEY_ENDLESS_ALARM = "key_endless_alarm_on"

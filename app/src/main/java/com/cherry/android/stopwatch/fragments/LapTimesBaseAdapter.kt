@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.cherry.android.stopwatch.R
-import com.cherry.android.stopwatch.TimeUtils
+import com.cherry.android.stopwatch.utils.TimeUtils
 import com.cherry.android.stopwatch.databinding.LapTimeItemBinding
 import com.cherry.android.stopwatch.databinding.LapTimesHolderListItemBinding
 

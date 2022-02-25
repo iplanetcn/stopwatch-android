@@ -19,6 +19,9 @@ import com.cherry.android.stopwatch.*
 import com.cherry.android.stopwatch.databinding.FragmentStopwatchBinding
 import com.cherry.android.stopwatch.manager.SoundManager
 import com.cherry.android.stopwatch.manager.Sounds
+import com.cherry.android.stopwatch.utils.AlarmUpdater
+import com.cherry.android.stopwatch.utils.LapTimeRecorder
+import com.cherry.android.stopwatch.utils.TimeUtils
 
 @SuppressLint("ClickableViewAccessibility")
 class StopwatchFragment : Fragment() {
@@ -47,12 +50,12 @@ class StopwatchFragment : Fragment() {
             false
         }
         binding.resetButton.setOnClickListener {
-            LapTimeRecorder.instance?.stopwatchReset()
+            LapTimeRecorder.stopwatchReset()
             reset()
         }
         binding.saveButton.setOnClickListener {
             if (isRunning) {
-                LapTimeRecorder.instance?.recordLapTime(
+                LapTimeRecorder.recordLapTime(
                     binding.stopwatchView.watchTime,
                     activity as MainActivity?
                 )
@@ -81,24 +84,15 @@ class StopwatchFragment : Fragment() {
         super.onResume()
         binding.stopwatchView.handler = object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(m: Message) {
-                if (m.data.getBoolean(
-                        MainActivity.MSG_UPDATE_COUNTER_TIME,
-                        false
-                    )
-                ) {
-                    mCurrentTimeMillis =
-                        m.data.getDouble(MainActivity.MSG_NEW_TIME_DOUBLE)
+                if (m.data.getBoolean(MainActivity.MSG_UPDATE_COUNTER_TIME, false)) {
+                    mCurrentTimeMillis = m.data.getDouble(MainActivity.MSG_NEW_TIME_DOUBLE)
                     setTime(mCurrentTimeMillis)
                     val currentSecond = mCurrentTimeMillis.toInt() / 1000
                     if (currentSecond > mLastSecond) {
                         SoundManager.doTick(requireContext())
                     }
                     mLastSecond = currentSecond
-                } else if (m.data.getBoolean(
-                        MainActivity.MSG_STATE_CHANGE,
-                        false
-                    )
-                ) {
+                } else if (m.data.getBoolean(MainActivity.MSG_STATE_CHANGE, false)) {
                     setUIState()
                 }
             }

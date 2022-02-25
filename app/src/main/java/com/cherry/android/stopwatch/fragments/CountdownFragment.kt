@@ -1,3 +1,4 @@
+@file:SuppressLint("ClickableViewAccessibility")
 package com.cherry.android.stopwatch.fragments
 
 import android.annotation.SuppressLint
@@ -24,8 +25,9 @@ import com.cherry.android.stopwatch.compat.startVibrate
 import com.cherry.android.stopwatch.databinding.FragmentCountdownBinding
 import com.cherry.android.stopwatch.manager.SoundManager
 import com.cherry.android.stopwatch.manager.Sounds
+import com.cherry.android.stopwatch.utils.AlarmUpdater
+import com.cherry.android.stopwatch.utils.TimeUtils
 
-@SuppressLint("ClickableViewAccessibility")
 class CountdownFragment : Fragment() {
     private var mCurrentTimeMillis = 0.0
     private var mLastHour = 0
@@ -36,7 +38,6 @@ class CountdownFragment : Fragment() {
 
     private lateinit var binding: FragmentCountdownBinding
 
-    //countdown picker dialog variables
     private var mDialogOnScreen = false
     override fun onCreateView(
         inflater: LayoutInflater,

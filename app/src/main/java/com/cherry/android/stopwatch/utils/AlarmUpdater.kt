@@ -1,4 +1,5 @@
-package com.cherry.android.stopwatch
+@file:SuppressLint("UnspecifiedImmutableFlag")
+package com.cherry.android.stopwatch.utils
 
 import android.annotation.SuppressLint
 import android.app.*
@@ -10,6 +11,8 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.cherry.android.stopwatch.MainActivity
+import com.cherry.android.stopwatch.R
 
 
 object AlarmUpdater {
@@ -19,7 +22,7 @@ object AlarmUpdater {
 
     const val NAME = "stopwatch_notify"
 
-    @SuppressLint("UnspecifiedImmutableFlag")
+
     fun cancelCountdownAlarm(context: Context?) {
         try {
             val alarmMan = context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -49,7 +52,6 @@ object AlarmUpdater {
     }
 
     //cancels alarm then sets new one
-    @SuppressLint("UnspecifiedImmutableFlag")
     fun setCountdownAlarm(context: Context, inMillis: Long) {
         val alarmMan = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val defineIntent = Intent(context, UpdateService::class.java)
@@ -76,7 +78,6 @@ object AlarmUpdater {
         }
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     fun showChronometerNotification(context: Context, startTime: Long) {
         // The PendingIntent to launch our activity if the user selects this notification
         val launcher = Intent(context, MainActivity::class.java)
@@ -124,7 +125,6 @@ object AlarmUpdater {
         }
 
         //show Countdown Complete notification
-        @SuppressLint("UnspecifiedImmutableFlag")
         private fun notifyStatusBar() {
             // The PendingIntent to launch our activity if the user selects this notification
             val launcher = Intent(this, MainActivity::class.java)
