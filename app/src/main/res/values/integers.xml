@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="number_5">5</integer>
+    <integer name="number_10">10</integer>
+    <integer name="number_15">15</integer>
+    <integer name="number_20">20</integer>
+    <integer name="number_25">25</integer>
+    <integer name="number_30">30</integer>
+    <integer name="number_35">35</integer>
+    <integer name="number_40">40</integer>
+    <integer name="number_45">45</integer>
+    <integer name="number_50">50</integer>
+    <integer name="number_55">55</integer>
+    <integer name="number_60">60</integer>
+    <integer name="number_70">70</integer>
+    <integer name="number_80">80</integer>
+    <integer name="number_90">90</integer>
+</resources>

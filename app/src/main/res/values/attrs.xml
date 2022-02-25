@@ -2,8 +2,8 @@
 <resources>
     <declare-styleable name="StopwatchView">
         <attr name="watchType" format="enum">
-            <enum name="type_stopwatch" value="1"/>
-            <enum name="type_countdown" value="0"/>
+            <enum name="Stopwatch" value="1"/>
+            <enum name="Countdown" value="0"/>
         </attr>
     </declare-styleable>
 </resources>

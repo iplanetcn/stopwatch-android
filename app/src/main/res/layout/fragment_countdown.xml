@@ -42,7 +42,7 @@
         custom:layout_constraintEnd_toEndOf="parent"
         custom:layout_constraintStart_toStartOf="parent"
         custom:layout_constraintTop_toBottomOf="@+id/time_counter"
-        custom:watchType="type_countdown" />
+        custom:watchType="Countdown" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/startButton"

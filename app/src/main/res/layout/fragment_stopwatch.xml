@@ -39,7 +39,7 @@
         custom:layout_constraintEnd_toEndOf="parent"
         custom:layout_constraintStart_toStartOf="parent"
         custom:layout_constraintTop_toBottomOf="@+id/counter_text"
-        custom:watchType="type_stopwatch" />
+        custom:watchType="Stopwatch" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/startButton"
@@ -49,7 +49,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
         android:contentDescription="@string/content_desc_start_sw"
-
         android:fontFamily="sans-serif"
         android:text="@string/start"
         android:textSize="@dimen/bottom_bar_portrait_button_font_size"
@@ -67,7 +66,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:contentDescription="@string/content_desc_reset"
-
         android:fontFamily="sans-serif"
         android:text="@string/reset"
         android:textSize="@dimen/bottom_bar_portrait_button_font_size"
@@ -85,7 +83,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         android:contentDescription="@string/content_desc_lap_time"
-
         android:fontFamily="sans-serif"
         android:text="@string/lap"
         android:textSize="@dimen/bottom_bar_portrait_button_font_size"
