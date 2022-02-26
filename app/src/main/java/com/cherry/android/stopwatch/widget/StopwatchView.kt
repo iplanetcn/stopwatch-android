@@ -176,18 +176,22 @@ class StopwatchView @JvmOverloads constructor(
     }
 
     private fun drawDial(canvas: Canvas) {
+        // draw large dial
         paint.color = Color.BLACK
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = 8f.dp
-        paint.isDither = true
-        paint.pathEffect = DashPathEffect(floatArrayOf(40f, 20f), 0f)
         canvas.drawCircle(pivotX, pivotY, largeRadius, paint)
+
+        paint.color = Color.WHITE
+        paint.strokeWidth = 4f.dp
+        paint.isDither = true
+        paint.pathEffect = DashPathEffect(floatArrayOf(20f, 20f), 0f)
+        canvas.drawCircle(pivotX, pivotY, largeRadius, paint)
+
+        paint.color = Color.BLACK
         paint.isDither = false
         paint.pathEffect = null
         paint.strokeWidth = 2f.dp
-        canvas.drawCircle(pivotX, pivotY, largeRadius - 4f.dp, paint)
-        canvas.drawCircle(pivotX, pivotY, largeRadius + 4f.dp, paint)
-
         paint.color = Color.LTGRAY
         canvas.drawCircle(pivotX, smallPivotY, smallRadius, paint)
 
