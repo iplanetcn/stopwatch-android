@@ -183,7 +183,7 @@ class CountdownFragment : Fragment() {
         binding.timeCounter.text = TimeUtils.createStyledSpannableString(
             activity,
             millis,
-            false
+            true
         )
     }
 

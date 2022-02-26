@@ -27,7 +27,8 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMode="auto" />
+            app:tabMode="auto"
+            android:contentDescription="@string/content_desc_tab_layout"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -40,16 +41,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
-        android:visibility="visible"/>
-
-    <com.cherry.android.stopwatch.widget.StopwatchView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

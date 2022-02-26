@@ -24,14 +24,15 @@
         android:id="@+id/time_counter"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/stopwatch_background"
         android:fontFamily="sans-serif-light"
         android:text="@string/default_time"
         android:textColor="@color/text_grey"
         android:textSize="@dimen/counter_font"
         app:layout_constraintBottom_toBottomOf="@id/guideline_center_horizontal"
         app:layout_constraintEnd_toEndOf="@+id/guideline_center_vertical"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/startButton"
@@ -43,10 +44,12 @@
         android:fontFamily="sans-serif"
         android:text="@string/start"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/resetButton"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal"
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/resetButton"
@@ -58,10 +61,12 @@
         android:fontFamily="sans-serif"
         android:text="@string/reset"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/guideline_center_vertical"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/startButton"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal"
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.cherry.android.stopwatch.widget.StopwatchView
         android:id="@+id/countdown_watch_view"

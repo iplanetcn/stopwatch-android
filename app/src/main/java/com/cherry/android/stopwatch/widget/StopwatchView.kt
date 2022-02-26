@@ -11,7 +11,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
@@ -95,8 +94,7 @@ class StopwatchView @JvmOverloads constructor(
         style = Paint.Style.FILL
         textAlign = Paint.Align.LEFT
         textSize = 20f.sp
-//        typeface = Typeface.DEFAULT
-        typeface = ResourcesCompat.getFont(context, R.font.karla_regular)
+        typeface = Typeface.DEFAULT
     }
 
     init {
