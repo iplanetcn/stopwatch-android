@@ -232,7 +232,7 @@ class StopwatchView @JvmOverloads constructor(
         canvas.restore()
 
         canvas.save()
-        repeat(24) {
+        repeat(30) {
             paint.strokeWidth = 2f
             paint.color = Color.LTGRAY
             val scaleLength = 20f
@@ -243,7 +243,7 @@ class StopwatchView @JvmOverloads constructor(
                 smallPivotY - smallRadius + scaleLength,
                 paint
             )
-            canvas.rotate(360 / 24f, pivotX, smallPivotY)
+            canvas.rotate(360 / 30f, pivotX, smallPivotY)
         }
         //Restore the original state
         canvas.restore()
