@@ -18,11 +18,11 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.cherry.android.stopwatch.databinding.ActivityMainBinding
 import com.cherry.android.stopwatch.fragments.CountdownFragment
-import com.cherry.android.stopwatch.utils.LapTimeRecorder
 import com.cherry.android.stopwatch.fragments.LapTimesFragment
 import com.cherry.android.stopwatch.fragments.StopwatchFragment
 import com.cherry.android.stopwatch.manager.SoundManager
 import com.cherry.android.stopwatch.utils.AlarmUpdater
+import com.cherry.android.stopwatch.utils.LapTimeRecorder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.*
@@ -143,20 +143,18 @@ class MainActivity : AppCompatActivity() {
         LapTimeRecorder.loadTimes(this)
         @Suppress("DEPRECATION")
         mWakeLock = mPowerMan!!.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, WAKE_LOCK_KEY)
-        mWakeLock?.apply { acquire(10*60*1000L /*10 minutes*/) }
-        val settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        SoundManager.setAudioState(settings.getBoolean(KEY_AUDIO_STATE, true))
-        SettingsActivity.loadSettings(settings)
-        if (mMenu != null) {
-            val audioButton = mMenu!!.findItem(R.id.menu_audio_toggle)
-            audioButton?.setIcon(if (SoundManager.isAudioOn) R.drawable.ic_baseline_volume_up_24 else R.drawable.ic_baseline_volume_off_24)
+        mWakeLock?.apply { acquire(10 * 60 * 1000L /*10 minutes*/) }
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).apply {
+            SoundManager.setAudioState(getBoolean(KEY_AUDIO_STATE, true))
+            SettingsActivity.loadSettings(this)
+            //jump straight to countdown if it was only item left running
+            val jumpToPage = getInt(KEY_JUMP_TO_PAGE, -1)
+            if (jumpToPage != -1) {
+                binding.viewpager.setCurrentItem(2, false)
+            }
         }
 
-        //jump straight to countdown if it was only item left running
-        val jumpToPage = settings.getInt(KEY_JUMP_TO_PAGE, -1)
-        if (jumpToPage != -1) {
-            binding.viewpager.setCurrentItem(2, false)
-        }
+        mMenu?.findItem(R.id.menu_audio_toggle)?.apply { updateAudioMenuItemIcon(this) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -187,10 +185,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         //get audio icon and set correct variant
-        val audioButton = menu.findItem(R.id.menu_audio_toggle)
-        audioButton?.setIcon(if (SoundManager.isAudioOn) R.drawable.ic_baseline_volume_up_24 else R.drawable.ic_baseline_volume_off_24)
+        updateAudioMenuItemIcon(menu.findItem(R.id.menu_audio_toggle))
         mMenu = menu
         return true
+    }
+
+    private fun updateAudioMenuItemIcon(menuItem: MenuItem) {
+        menuItem.apply {
+            setIcon(
+                if (SoundManager.isAudioOn)
+                    R.drawable.ic_baseline_volume_up_24
+                else
+                    R.drawable.ic_baseline_volume_off_24
+            )
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -207,7 +215,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else if (item.itemId == R.id.menu_audio_toggle) {
             SoundManager.setAudioState(!SoundManager.isAudioOn)
-            item.setIcon(if (SoundManager.isAudioOn) R.drawable.ic_baseline_volume_up_24 else R.drawable.ic_baseline_volume_off_24)
+            updateAudioMenuItemIcon(item)
         } else if (item.itemId == R.id.menu_settings) {
             val intent = Intent(this, SettingsActivity::class.java)
             intent.data = Uri.parse(getString(R.string.play_store_uri))

@@ -11,13 +11,12 @@ object LapTimeRecorder {
     private const val KEY_LAP_TIME_X = "LAP_TIME_"
 
     fun loadTimes(cxt: Context) {
-        val settings = cxt.getSharedPreferences(PREFS_NAME_LAP_TIMES, Context.MODE_PRIVATE)
-        if (settings != null) {
+        cxt.getSharedPreferences(PREFS_NAME_LAP_TIMES, Context.MODE_PRIVATE).apply {
             var lapTimeNum = 0
             mLapTimes.clear()
             val lt = 0.0
             var prevZero = false
-            while (settings.getLong(KEY_LAP_TIME_X + lapTimeNum, -1L).toDouble() != -1.0) {
+            while (getLong(KEY_LAP_TIME_X + lapTimeNum, -1L).toDouble() != -1.0) {
                 lapTimeNum++
                 prevZero = if (lt == 0.0 && prevZero) {
                     continue
@@ -30,32 +29,29 @@ object LapTimeRecorder {
     }
 
     fun saveTimes(cxt: Context) {
-        val settings = cxt.getSharedPreferences(PREFS_NAME_LAP_TIMES, Context.MODE_PRIVATE)
-        if (settings != null) {
-            val editor = settings.edit()
-            if (editor != null) {
-                editor.clear()
+        cxt.getSharedPreferences(PREFS_NAME_LAP_TIMES, Context.MODE_PRIVATE)
+            .edit()
+            .apply {
+                clear()
                 if (mLapTimes.isNotEmpty()) {
                     for (i in mLapTimes.indices) {
-                        editor.putLong(KEY_LAP_TIME_X + i, mLapTimes[i].toLong())
+                        putLong(KEY_LAP_TIME_X + i, mLapTimes[i].toLong())
                     }
                 }
-                editor.apply()
+                apply()
             }
-        }
     }
 
-    fun recordLapTime(time: Double, activity: MainActivity?) {
+    fun recordLapTime(time: Double, activity: MainActivity) {
         mLapTimes.add(0, time)
-        if (activity != null) {
-            val ltf = activity.lapTimeFragment
-            ltf?.lapTimesUpdated()
+        activity.lapTimeFragment?.apply {
+            lapTimesUpdated()
         }
     }
 
     fun stopwatchReset() {
-        if (mLapTimes.size > 0 && mLapTimes[0] == 0.0) return  //don't record multiple resets
-        mLapTimes.add(0, 0.0)
+        if (mLapTimes.size > 0 && mLapTimes[0] == 0.0) return
+        mLapTimes.clear()
     }
 
     val times: ArrayList<LapTimeBlock>
@@ -77,14 +73,15 @@ object LapTimeRecorder {
             return lapTimeBlocks
         }
 
-    fun reset(activity: MainActivity?) {
-        activity?.apply {
+    fun reset(activity: MainActivity) {
+        activity.apply {
             mLapTimes.clear()
-            activity.getSharedPreferences(PREFS_NAME_LAP_TIMES, Context.MODE_PRIVATE)
-                .edit()
-                .clear()
-                .apply()
-            activity.lapTimeFragment?.lapTimesUpdated()
+            getSharedPreferences(PREFS_NAME_LAP_TIMES, Context.MODE_PRIVATE)
+                .edit().apply {
+                    clear()
+                    apply()
+                }
+            lapTimeFragment?.lapTimesUpdated()
         }
 
     }

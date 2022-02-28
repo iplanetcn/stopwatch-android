@@ -49,12 +49,13 @@ class SettingsActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         getSharedPreferences(MainActivity.PREFS_NAME, MODE_PRIVATE)
-            .edit()
-            .putBoolean(KEY_TICKING, isTicking)
-            .putBoolean(KEY_ENDLESS_ALARM, isEndlessAlarm)
-            .putBoolean(KEY_VIBRATE, isVibrate)
-            .putBoolean(KEY_ANIMATING, isAnimating)
-            .apply()
+            .edit().apply {
+                putBoolean(KEY_TICKING, isTicking)
+                putBoolean(KEY_ENDLESS_ALARM, isEndlessAlarm)
+                putBoolean(KEY_VIBRATE, isVibrate)
+                putBoolean(KEY_ANIMATING, isAnimating)
+                apply()
+            }
     }
 
     companion object {

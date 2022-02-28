@@ -15,7 +15,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.cherry.android.stopwatch.*
+import com.cherry.android.stopwatch.MainActivity
+import com.cherry.android.stopwatch.R
 import com.cherry.android.stopwatch.databinding.FragmentStopwatchBinding
 import com.cherry.android.stopwatch.manager.SoundManager
 import com.cherry.android.stopwatch.manager.Sounds
@@ -56,7 +57,7 @@ class StopwatchFragment : Fragment() {
             if (isRunning) {
                 LapTimeRecorder.recordLapTime(
                     binding.stopwatchView.watchTime,
-                    activity as MainActivity?
+                    activity as MainActivity
                 )
                 SoundManager.playSound(requireContext(), Sounds.SOUND_LAP_TIME)
             }
@@ -65,18 +66,17 @@ class StopwatchFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        val settings = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val editor = settings.edit()
-        editor.putBoolean(PREF_IS_RUNNING, mRunningState)
-        binding.stopwatchView.saveState(editor)
-        editor.apply()
-        try {
-            if (isRunning && mCurrentTimeMillis > 0) {
-                AlarmUpdater.showChronometerNotification(requireContext(), mCurrentTimeMillis.toLong())
-            }
-        } catch (ignored: Exception) {
+        requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().apply{
+            putBoolean(PREF_IS_RUNNING, mRunningState)
+            binding.stopwatchView.saveState(this)
+            apply()
+        }
+
+        if (isRunning && mCurrentTimeMillis > 0) {
+            AlarmUpdater.showChronometerNotification(requireContext(), mCurrentTimeMillis.toLong())
         }
         binding.stopwatchView.stop()
+
     }
 
     override fun onResume() {
@@ -97,9 +97,11 @@ class StopwatchFragment : Fragment() {
             }
         }
         AlarmUpdater.cancelChronometerNotification(requireContext())
-        val settings = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        mRunningState = settings.getBoolean(PREF_IS_RUNNING, false)
-        binding.stopwatchView.restoreState(settings)
+        requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).apply {
+            mRunningState = getBoolean(PREF_IS_RUNNING, false)
+            binding.stopwatchView.restoreState(this)
+        }
+
         (activity as MainActivity?)!!.registerStopwatchFragment(this)
 
         // center the timer text in a fixed position, stops wiggling numbers
@@ -127,7 +129,10 @@ class StopwatchFragment : Fragment() {
         binding.saveButton.isEnabled = mRunningState || mCurrentTimeMillis != 0.0
         if (isAdded) binding.startButton.text =
             if (mRunningState) getString(R.string.pause) else getString(R.string.start)
-        if (stateChanged) SoundManager.playSound(requireContext(), if (mRunningState) Sounds.SOUND_START else Sounds.SOUND_STOP)
+        if (stateChanged) SoundManager.playSound(
+            requireContext(),
+            if (mRunningState) Sounds.SOUND_START else Sounds.SOUND_STOP
+        )
     }
 
     fun reset() {
