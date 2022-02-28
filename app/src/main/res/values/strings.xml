@@ -37,20 +37,5 @@
     <string name="settings_libraries_text">None</string>
     <string name="reset_time">Reset Time</string>
     <string name="audio_toggle">Audio Toggle</string>
-    <string name="number_5">5</string>
-    <string name="number_10">10</string>
-    <string name="number_15">15</string>
-    <string name="number_20">20</string>
-    <string name="number_25">25</string>
-    <string name="number_30">30</string>
-    <string name="number_35">35</string>
-    <string name="number_40">40</string>
-    <string name="number_45">45</string>
-    <string name="number_50">50</string>
-    <string name="number_55">55</string>
-    <string name="number_60">60</string>
-    <string name="number_70">70</string>
-    <string name="number_80">80</string>
-    <string name="number_90">90</string>
 
 </resources>

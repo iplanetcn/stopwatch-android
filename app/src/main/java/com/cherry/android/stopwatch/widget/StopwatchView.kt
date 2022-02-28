@@ -32,42 +32,6 @@ private const val KEY_LAST_TIME = "last_time"
 private const val KEY_NOW_TIME = "current_time_int"
 private const val KEY_COUNTDOWN_SUFFIX = "_cd"
 
-private enum class Minutes(val label: Int) {
-    M_5(R.string.number_5),
-    M_10(R.string.number_10),
-    M_15(R.string.number_15),
-    M_20(R.string.number_20),
-    M_25(R.string.number_25),
-    M_30(R.string.number_30),
-}
-
-private enum class Numbers(val label: Int) {
-    N_10(R.string.number_10),
-    N_20(R.string.number_20),
-    N_30(R.string.number_30),
-    N_40(R.string.number_40),
-    N_50(R.string.number_50),
-    N_60(R.string.number_60),
-    N_70(R.string.number_70),
-    N_80(R.string.number_80),
-    N_90(R.string.number_90),
-}
-
-private enum class Seconds(val label: Int) {
-    S_5(R.string.number_5),
-    S_10(R.string.number_10),
-    S_15(R.string.number_15),
-    S_20(R.string.number_20),
-    S_25(R.string.number_25),
-    S_30(R.string.number_30),
-    S_35(R.string.number_35),
-    S_40(R.string.number_40),
-    S_45(R.string.number_45),
-    S_50(R.string.number_50),
-    S_55(R.string.number_55),
-    S_60(R.string.number_60);
-}
-
 class StopwatchView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -77,8 +41,6 @@ class StopwatchView @JvmOverloads constructor(
     private var largeRadius: Float = 0.0f
     private var smallRadius: Float = 0.0f
     private var smallPivotY: Float = 0.0f
-    private val pointPosition: PointF = PointF(0.0f, 0.0f)
-    private val rect = Rect()
     private var isStopwatch: Boolean = true
     private var displayTimeMillis: Int = 0
     private val stopwatchMode: Boolean = true
@@ -159,7 +121,12 @@ class StopwatchView @JvmOverloads constructor(
         secondsHand.lineTo(pivotX, pivotY - largeRadius - 80f)
         secondsHand.lineTo(pivotX - 20f, pivotY)
         secondsHand.close()
-        drawHand(canvas, secondsHand, Math.toDegrees(secondsAngle.toDouble()).toFloat(), PointF(pivotX, pivotY))
+        drawHand(
+            canvas,
+            secondsHand,
+            Math.toDegrees(secondsAngle.toDouble()).toFloat(),
+            PointF(pivotX, pivotY)
+        )
 
         val minuteHand = Path()
         minuteHand.moveTo(pivotX - 10f, smallPivotY)
@@ -167,7 +134,12 @@ class StopwatchView @JvmOverloads constructor(
         minuteHand.lineTo(pivotX, smallPivotY - smallRadius - 20f)
         minuteHand.lineTo(pivotX - 10f, smallPivotY)
         minuteHand.close()
-        drawHand(canvas, minuteHand, Math.toDegrees(minutesAngle.toDouble()).toFloat(), PointF(pivotX, smallPivotY))
+        drawHand(
+            canvas,
+            minuteHand,
+            Math.toDegrees(minutesAngle.toDouble()).toFloat(),
+            PointF(pivotX, smallPivotY)
+        )
     }
 
     private fun drawDial(canvas: Canvas) {
@@ -233,7 +205,7 @@ class StopwatchView @JvmOverloads constructor(
         canvas.save()
         paint.color = Color.rgb(155, 22, 29)
         repeat(200) {
-            val scaleLength: Float =  when {
+            val scaleLength: Float = when {
                 it % 10 == 0 -> {
                     paint.strokeWidth = 2f
                     30f
@@ -283,26 +255,25 @@ class StopwatchView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textSize = 12f.sp
         val labelRadius = smallRadius - 40f
-        for (i in Minutes.values()) {
-            pointPosition.computeXYForMinutes(i.ordinal, labelRadius)
-            val label = resources.getString(i.label)
-            paint.getTextBounds(label, 0, label.length, rect)
+
+        for (i in 0 until 30 step 5) {
+            if (i == 0) {
+                continue
+            }
+            val startAngle = -0.5f * PI
+            val angle = startAngle + i * (2 * PI / 30)
+            val label = "$i"
+            val labelBounds = Rect()
+            paint.getTextBounds(label, 0, label.length, labelBounds)
+            val centerX = (labelRadius * cos(angle)).toFloat() + width / 2 - labelBounds.width() / 2
+            val centerY = (labelRadius * sin(angle)).toFloat() + smallPivotY + labelBounds.height() / 2
             canvas.drawText(
                 label,
-                pointPosition.x - rect.width() / 2,
-                pointPosition.y + rect.height() / 2,
+                centerX,
+                centerY,
                 paint
             )
         }
-    }
-
-    private fun PointF.computeXYForMinutes(pos: Int, radius: Float) {
-        // from 5 min angle
-        val startAngle = PI * (-1 / 6.0)
-        // increase by 5 min angle
-        val angle = startAngle + pos * (PI / 3.0)
-        x = (radius * cos(angle)).toFloat() + width / 2
-        y = (radius * sin(angle)).toFloat() + smallPivotY
     }
 
     private fun drawNumbers(canvas: Canvas) {
@@ -310,24 +281,26 @@ class StopwatchView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textSize = 14f.sp
         val labelRadius = largeRadius - 80f
-        for (i in Numbers.values()) {
-            pointPosition.computeXYForNumbers(i.ordinal, labelRadius)
-            val label = resources.getString(i.label)
-            paint.getTextBounds(label, 0, label.length, rect)
+
+        for (i in 0 until 100 step 10) {
+            if (i == 0) {
+                continue
+            }
+            val startAngle = -0.5f * PI
+            val angle = startAngle + i * (2 * PI / 100)
+            val label = "$i"
+            val labelBounds = Rect()
+            paint.getTextBounds(label, 0, label.length, labelBounds)
+            val centerX = (labelRadius * cos(angle)).toFloat() + width / 2 - labelBounds.width() / 2
+            val centerY =
+                (labelRadius * sin(angle)).toFloat() + height / 2 + labelBounds.height() / 2
             canvas.drawText(
                 label,
-                pointPosition.x - rect.width() / 2,
-                pointPosition.y + rect.height() / 2,
+                centerX,
+                centerY,
                 paint
             )
         }
-    }
-
-    private fun PointF.computeXYForNumbers(pos: Int, radius: Float) {
-        val startAngle = PI * (-3.0 / 10.0)
-        val angle = startAngle + pos / 5.0 * PI
-        x = (radius * cos(angle)).toFloat() + width / 2
-        y = (radius * sin(angle)).toFloat() + height / 2
     }
 
     private fun drawSeconds(canvas: Canvas) {
@@ -335,28 +308,24 @@ class StopwatchView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textSize = 18f.sp
         val labelRadius = largeRadius + RADIUS_OFFSET_LABEL
-        for (i in Seconds.values()) {
-            pointPosition.computeXYForSeconds(i.ordinal, labelRadius)
-            val label = resources.getString(i.label)
-            paint.getTextBounds(label, 0, label.length, rect)
+
+        for (i in 0 until 60 step 5) {
+            val startAngle = -0.5f * PI
+            val angle = startAngle + i * (PI / 30)
+            val label = if (i == 0) "60" else "$i"
+            val labelBounds = Rect()
+            paint.getTextBounds(label, 0, label.length, labelBounds)
+            val centerX = (labelRadius * cos(angle)).toFloat() + width / 2 - labelBounds.width() / 2
+            val centerY =
+                (labelRadius * sin(angle)).toFloat() + height / 2 + labelBounds.height() / 2
             canvas.drawText(
                 label,
-                pointPosition.x - rect.width() / 2,
-                pointPosition.y + rect.height() / 2,
+                centerX,
+                centerY,
                 paint
             )
         }
     }
-
-    private fun PointF.computeXYForSeconds(pos: Int, radius: Float) {
-        // from 5 min angle
-        val startAngle = PI * (-1 / 3.0)
-        // increase by 5 min angle
-        val angle = startAngle + pos * (PI / 6.0)
-        x = (radius * cos(angle)).toFloat() + width / 2
-        y = (radius * sin(angle)).toFloat() + height / 2
-    }
-
 
     private fun updateContentDescription() {
         contentDescription = getContentDescriptionLabel()
@@ -377,7 +346,8 @@ class StopwatchView @JvmOverloads constructor(
             //to fix bug #42, now the hands reset even when paused
             removeCallbacks(animator)
             post { //during the animation also roll back the clock time to the current hand times.
-                secondsAngle = PI.toFloat() * 2 * (seconds.toFloat() / 60.0f) //ensure the hands have ended at correct position
+                secondsAngle =
+                    PI.toFloat() * 2 * (seconds.toFloat() / 60.0f) //ensure the hands have ended at correct position
                 minutesAngle = PI.toFloat() * 2 * (minutes.toFloat() / 30.0f)
                 displayTimeMillis = (hours * 3600000 + minutes * 60000 + seconds * 1000)
                 broadcastClockTime(if (isStopwatch) displayTimeMillis.toDouble() else -displayTimeMillis.toDouble())
@@ -391,7 +361,8 @@ class StopwatchView @JvmOverloads constructor(
         minutesAngle %= PI.toFloat() * 2 //avoids more than 1 rotation
 
         //forces hands to go back to 0 not forwards
-        val toSecsAngle = shortestAngleToDestination(secondsAngle, PI.toFloat() * 2 * seconds / 60f, resetting)
+        val toSecsAngle =
+            shortestAngleToDestination(secondsAngle, PI.toFloat() * 2 * seconds / 60f, resetting)
         //avoid multiple minutes hands rotates as face is 0-29 not 0-59
         val toMinutesAngle = shortestAngleToDestination(
             minutesAngle,
