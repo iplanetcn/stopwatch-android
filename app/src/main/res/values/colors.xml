@@ -3,7 +3,6 @@
 	<color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
     <color name="text_grey">#ff666666</color>
-    <color name="stopwatch_background">#fff5f5f5</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>

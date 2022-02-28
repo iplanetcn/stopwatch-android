@@ -23,7 +23,6 @@
         android:id="@+id/stopwatch_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="5dp"
         android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/guideline_center_vertical"
@@ -41,7 +40,9 @@
         android:textSize="@dimen/counter_font"
         app:layout_constraintBottom_toBottomOf="@+id/guideline_center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline_center_vertical" />
+        app:layout_constraintStart_toStartOf="@+id/guideline_center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/startButton"
@@ -52,10 +53,12 @@
         android:layout_marginEnd="8dp"
         android:fontFamily="sans-serif"
         android:text="@string/start"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/resetButton"
         app:layout_constraintHorizontal_weight="3"
         app:layout_constraintStart_toStartOf="@+id/guideline_center_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal"
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/resetButton"
@@ -66,10 +69,12 @@
         android:layout_marginEnd="8dp"
         android:fontFamily="sans-serif"
         android:text="@string/reset"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/saveButton"
         app:layout_constraintHorizontal_weight="3"
         app:layout_constraintStart_toEndOf="@+id/startButton"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal"
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveButton"
@@ -81,9 +86,11 @@
         android:fontFamily="sans-serif"
 
         android:text="@string/lap"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@+id/resetButton"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

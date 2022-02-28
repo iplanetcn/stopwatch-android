@@ -23,6 +23,7 @@
     <string name="lap">LAP</string>
     <string name="content_desc_start_sw">Start/Pause Stopwatch</string>
     <string name="content_desc_start_cd">Start/Pause Countdown</string>
+    <string name="content_desc_tab_layout">Tab Layout</string>
     <string name="content_desc_reset">Reset</string>
     <string name="content_desc_lap_time">Save Lap Time</string>
     <string name="settings_settings">SETTINGS</string>
