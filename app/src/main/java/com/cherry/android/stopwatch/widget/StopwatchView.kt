@@ -11,7 +11,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
@@ -95,8 +94,7 @@ class StopwatchView @JvmOverloads constructor(
         style = Paint.Style.FILL
         textAlign = Paint.Align.LEFT
         textSize = 20f.sp
-//        typeface = Typeface.DEFAULT
-        typeface = ResourcesCompat.getFont(context, R.font.karla_regular)
+        typeface = Typeface.DEFAULT
     }
 
     init {
@@ -128,9 +126,6 @@ class StopwatchView @JvmOverloads constructor(
     }
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
-//        val xPad = paddingStart + paddingEnd
-//        val yPad = paddingTop + paddingBottom
-//        largeRadius = (min(width - xPad, height - yPad) / 2.0 * 0.7).toFloat()
         largeRadius = (min(width, height) / 2.0 * 0.7).toFloat()
         smallRadius = largeRadius * 0.3f
         smallPivotY = pivotY - largeRadius / 2.0f
@@ -202,25 +197,25 @@ class StopwatchView @JvmOverloads constructor(
     }
 
     private fun drawScales(canvas: Canvas) {
-        var scaleLength: Float?
+
 
         canvas.save()
-        for (i in 0..239) {
-            when {
-                i % 20 == 0 -> {
+        repeat(240) {
+            val scaleLength: Float = when {
+                it % 20 == 0 -> {
                     paint.strokeWidth = 6f
                     paint.color = Color.BLACK
-                    scaleLength = 40f
+                    40f
                 }
-                i % 4 == 0 -> {
+                it % 4 == 0 -> {
                     paint.strokeWidth = 2f
                     paint.color = Color.LTGRAY
-                    scaleLength = 40f
+                    40f
                 }
                 else -> {
                     paint.strokeWidth = 1f
                     paint.color = Color.LTGRAY
-                    scaleLength = 30f
+                    30f
                 }
             }
             canvas.drawLine(
@@ -237,19 +232,19 @@ class StopwatchView @JvmOverloads constructor(
 
         canvas.save()
         paint.color = Color.rgb(155, 22, 29)
-        for (i in 0..199) {
-            when {
-                i % 10 == 0 -> {
+        repeat(200) {
+            val scaleLength: Float =  when {
+                it % 10 == 0 -> {
                     paint.strokeWidth = 2f
-                    scaleLength = 30f
+                    30f
                 }
-                i % 2 == 0 -> {
+                it % 2 == 0 -> {
                     paint.strokeWidth = 2f
-                    scaleLength = 20f
+                    20f
                 }
                 else -> {
                     paint.strokeWidth = 1f
-                    scaleLength = 20f
+                    20f
                 }
             }
             canvas.drawLine(
@@ -265,10 +260,10 @@ class StopwatchView @JvmOverloads constructor(
         canvas.restore()
 
         canvas.save()
-        for (i in 0..23) {
+        repeat(24) {
             paint.strokeWidth = 2f
             paint.color = Color.LTGRAY
-            scaleLength = 20f
+            val scaleLength = 20f
             canvas.drawLine(
                 pivotX,
                 smallPivotY - smallRadius,
@@ -353,13 +348,13 @@ class StopwatchView @JvmOverloads constructor(
         }
     }
 
-    private fun PointF.computeXYForSeconds(pos: Int, _radius: Float) {
+    private fun PointF.computeXYForSeconds(pos: Int, radius: Float) {
         // from 5 min angle
         val startAngle = PI * (-1 / 3.0)
         // increase by 5 min angle
         val angle = startAngle + pos * (PI / 6.0)
-        x = (_radius * cos(angle)).toFloat() + width / 2
-        y = (_radius * sin(angle)).toFloat() + height / 2
+        x = (radius * cos(angle)).toFloat() + width / 2
+        y = (radius * sin(angle)).toFloat() + height / 2
     }
 
 
