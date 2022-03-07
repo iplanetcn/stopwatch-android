@@ -68,7 +68,7 @@
         app:layout_constraintTop_toBottomOf="@+id/guideline_center_horizontal"
         app:layout_constraintVertical_bias="0.0" />
 
-    <com.cherry.android.stopwatch.widget.StopwatchView
+    <io.github.iplanetcn.app.stopwatch.widget.StopwatchView
         android:id="@+id/countdown_watch_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

@@ -19,7 +19,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5" />
 
-    <com.cherry.android.stopwatch.widget.StopwatchView
+    <io.github.iplanetcn.app.stopwatch.widget.StopwatchView
         android:id="@+id/stopwatch_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

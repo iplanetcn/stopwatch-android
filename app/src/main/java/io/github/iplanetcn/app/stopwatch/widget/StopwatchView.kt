@@ -1,4 +1,4 @@
-package com.cherry.android.stopwatch.widget
+package io.github.iplanetcn.app.stopwatch.widget
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -14,15 +14,15 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
-import com.cherry.android.stopwatch.MainActivity
-import com.cherry.android.stopwatch.R
-import com.cherry.android.stopwatch.SettingsActivity
-import com.cherry.android.stopwatch.compat.dp
-import com.cherry.android.stopwatch.compat.sp
-import com.cherry.android.stopwatch.compat.startVibrate
-import com.cherry.android.stopwatch.fragments.CountdownFragment
-import com.cherry.android.stopwatch.manager.SoundManager
-import com.cherry.android.stopwatch.utils.AlarmUpdater
+import io.github.iplanetcn.app.stopwatch.MainActivity
+import io.github.iplanetcn.app.stopwatch.R
+import io.github.iplanetcn.app.stopwatch.SettingsActivity
+import io.github.iplanetcn.app.stopwatch.compat.dp
+import io.github.iplanetcn.app.stopwatch.compat.sp
+import io.github.iplanetcn.app.stopwatch.compat.startVibrate
+import io.github.iplanetcn.app.stopwatch.fragments.CountdownFragment
+import io.github.iplanetcn.app.stopwatch.manager.SoundManager
+import io.github.iplanetcn.app.stopwatch.utils.AlarmUpdater
 import kotlin.math.*
 
 

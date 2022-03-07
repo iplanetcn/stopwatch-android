@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.cherry.android.stopwatch.compat
+package io.github.iplanetcn.app.stopwatch.compat
 
 import android.content.Context
 import android.os.Build

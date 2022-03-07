@@ -1,4 +1,4 @@
-package com.cherry.android.stopwatch.fragments
+package io.github.iplanetcn.app.stopwatch.fragments
 
 import android.annotation.SuppressLint
 import android.util.SparseBooleanArray
@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.core.util.remove
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
-import com.cherry.android.stopwatch.databinding.ItemLapTimeBinding
-import com.cherry.android.stopwatch.databinding.ItemLapTimesBinding
-import com.cherry.android.stopwatch.utils.TimeUtils
+import io.github.iplanetcn.app.stopwatch.databinding.ItemLapTimeBinding
+import io.github.iplanetcn.app.stopwatch.databinding.ItemLapTimesBinding
+import io.github.iplanetcn.app.stopwatch.utils.TimeUtils
 
 class LapTimesAdapter(
     private val data: ArrayList<LapTimeBlock>,

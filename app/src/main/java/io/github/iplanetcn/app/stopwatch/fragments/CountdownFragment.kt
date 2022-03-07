@@ -1,5 +1,5 @@
 @file:SuppressLint("ClickableViewAccessibility")
-package com.cherry.android.stopwatch.fragments
+package io.github.iplanetcn.app.stopwatch.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -20,13 +20,15 @@ import android.widget.NumberPicker
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
-import com.cherry.android.stopwatch.*
-import com.cherry.android.stopwatch.compat.startVibrate
-import com.cherry.android.stopwatch.databinding.FragmentCountdownBinding
-import com.cherry.android.stopwatch.manager.SoundManager
-import com.cherry.android.stopwatch.manager.Sounds
-import com.cherry.android.stopwatch.utils.AlarmUpdater
-import com.cherry.android.stopwatch.utils.TimeUtils
+import io.github.iplanetcn.app.stopwatch.*
+import io.github.iplanetcn.app.stopwatch.compat.startVibrate
+import io.github.iplanetcn.app.stopwatch.databinding.FragmentCountdownBinding
+import io.github.iplanetcn.app.stopwatch.manager.SoundManager
+import io.github.iplanetcn.app.stopwatch.manager.Sounds
+import io.github.iplanetcn.app.stopwatch.utils.AlarmUpdater
+import io.github.iplanetcn.app.stopwatch.utils.TimeUtils
+import io.github.iplanetcn.app.stopwatch.MainActivity
+import io.github.iplanetcn.app.stopwatch.SettingsActivity
 
 class CountdownFragment : Fragment() {
     private var mCurrentTimeMillis = 0.0

@@ -1,4 +1,4 @@
-package com.cherry.android.stopwatch.fragments
+package io.github.iplanetcn.app.stopwatch.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,14 +15,14 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.cherry.android.stopwatch.MainActivity
-import com.cherry.android.stopwatch.R
-import com.cherry.android.stopwatch.databinding.FragmentStopwatchBinding
-import com.cherry.android.stopwatch.manager.SoundManager
-import com.cherry.android.stopwatch.manager.Sounds
-import com.cherry.android.stopwatch.utils.AlarmUpdater
-import com.cherry.android.stopwatch.utils.LapTimeRecorder
-import com.cherry.android.stopwatch.utils.TimeUtils
+import io.github.iplanetcn.app.stopwatch.MainActivity
+import io.github.iplanetcn.app.stopwatch.R
+import io.github.iplanetcn.app.stopwatch.databinding.FragmentStopwatchBinding
+import io.github.iplanetcn.app.stopwatch.manager.SoundManager
+import io.github.iplanetcn.app.stopwatch.manager.Sounds
+import io.github.iplanetcn.app.stopwatch.utils.AlarmUpdater
+import io.github.iplanetcn.app.stopwatch.utils.LapTimeRecorder
+import io.github.iplanetcn.app.stopwatch.utils.TimeUtils
 
 @SuppressLint("ClickableViewAccessibility")
 class StopwatchFragment : Fragment() {

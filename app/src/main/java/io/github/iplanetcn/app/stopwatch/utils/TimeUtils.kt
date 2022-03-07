@@ -1,10 +1,11 @@
-package com.cherry.android.stopwatch.utils
+package io.github.iplanetcn.app.stopwatch.utils
 
 import android.content.Context
 import android.text.SpannableString
 import android.text.style.TextAppearanceSpan
 import android.util.Log
-import com.cherry.android.stopwatch.R
+import io.github.iplanetcn.app.stopwatch.R
+import timber.log.Timber
 import kotlin.math.floor
 
 object TimeUtils {
@@ -72,7 +73,7 @@ object TimeUtils {
                 }
             }
         } catch (e: Exception) {
-            Log.e("USW", "Switched Fragment Error", e)
+            Timber.e("USW", "Switched Fragment Error", e)
         }
         return sString
     }

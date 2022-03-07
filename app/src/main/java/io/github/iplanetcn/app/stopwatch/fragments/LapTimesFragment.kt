@@ -1,4 +1,4 @@
-package com.cherry.android.stopwatch.fragments
+package io.github.iplanetcn.app.stopwatch.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,10 +8,10 @@ import androidx.appcompat.view.ActionMode
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.cherry.android.stopwatch.MainActivity
-import com.cherry.android.stopwatch.R
-import com.cherry.android.stopwatch.databinding.FragmentLapTimesBinding
-import com.cherry.android.stopwatch.utils.LapTimeRecorder
+import io.github.iplanetcn.app.stopwatch.MainActivity
+import io.github.iplanetcn.app.stopwatch.R
+import io.github.iplanetcn.app.stopwatch.databinding.FragmentLapTimesBinding
+import io.github.iplanetcn.app.stopwatch.utils.LapTimeRecorder
 import timber.log.Timber
 
 class LapTimesFragment : Fragment(), LapTimeListener {

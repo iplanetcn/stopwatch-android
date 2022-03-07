@@ -1,6 +1,6 @@
 @file:SuppressLint("UnspecifiedImmutableFlag")
 
-package com.cherry.android.stopwatch.utils
+package io.github.iplanetcn.app.stopwatch.utils
 
 import android.annotation.SuppressLint
 import android.app.*
@@ -12,8 +12,8 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.cherry.android.stopwatch.MainActivity
-import com.cherry.android.stopwatch.R
+import io.github.iplanetcn.app.stopwatch.MainActivity
+import io.github.iplanetcn.app.stopwatch.R
 
 
 object AlarmUpdater {

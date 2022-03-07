@@ -1,4 +1,4 @@
-package com.cherry.android.stopwatch.fragments
+package io.github.iplanetcn.app.stopwatch.fragments
 
 interface LapTimeListener {
     fun lapTimesUpdated()

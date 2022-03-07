@@ -1,9 +1,9 @@
-package com.cherry.android.stopwatch.utils
+package io.github.iplanetcn.app.stopwatch.utils
 
 import android.content.Context
-import com.cherry.android.stopwatch.MainActivity
-import com.cherry.android.stopwatch.fragments.LapTimeBlock
-import com.cherry.android.stopwatch.fragments.LapTimesFragment
+import io.github.iplanetcn.app.stopwatch.MainActivity
+import io.github.iplanetcn.app.stopwatch.fragments.LapTimeBlock
+import io.github.iplanetcn.app.stopwatch.fragments.LapTimesFragment
 
 object LapTimeRecorder {
     private val mLapTimes: ArrayList<Double> = ArrayList()

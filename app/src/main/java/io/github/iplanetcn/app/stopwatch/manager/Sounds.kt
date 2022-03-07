@@ -1,4 +1,4 @@
-package com.cherry.android.stopwatch.manager
+package io.github.iplanetcn.app.stopwatch.manager
 
 /**
  * Sounds

@@ -1,4 +1,4 @@
-package com.cherry.android.stopwatch
+package io.github.iplanetcn.app.stopwatch
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -16,13 +16,13 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.cherry.android.stopwatch.databinding.ActivityMainBinding
-import com.cherry.android.stopwatch.fragments.CountdownFragment
-import com.cherry.android.stopwatch.fragments.LapTimesFragment
-import com.cherry.android.stopwatch.fragments.StopwatchFragment
-import com.cherry.android.stopwatch.manager.SoundManager
-import com.cherry.android.stopwatch.utils.AlarmUpdater
-import com.cherry.android.stopwatch.utils.LapTimeRecorder
+import io.github.iplanetcn.app.stopwatch.databinding.ActivityMainBinding
+import io.github.iplanetcn.app.stopwatch.fragments.CountdownFragment
+import io.github.iplanetcn.app.stopwatch.fragments.LapTimesFragment
+import io.github.iplanetcn.app.stopwatch.fragments.StopwatchFragment
+import io.github.iplanetcn.app.stopwatch.manager.SoundManager
+import io.github.iplanetcn.app.stopwatch.utils.AlarmUpdater
+import io.github.iplanetcn.app.stopwatch.utils.LapTimeRecorder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.*

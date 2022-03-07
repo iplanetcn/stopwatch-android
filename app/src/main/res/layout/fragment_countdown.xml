@@ -32,7 +32,7 @@
         custom:layout_constraintStart_toStartOf="parent"
         custom:layout_constraintTop_toTopOf="parent" />
 
-    <com.cherry.android.stopwatch.widget.StopwatchView
+    <io.github.iplanetcn.app.stopwatch.widget.StopwatchView
         android:id="@+id/countdown_watch_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

@@ -1,7 +1,7 @@
-package com.cherry.android.stopwatch
+package io.github.iplanetcn.app.stopwatch
 
 import android.app.Application
-import com.cherry.android.stopwatch.manager.SoundManager
+import io.github.iplanetcn.app.stopwatch.manager.SoundManager
 import timber.log.Timber
 
 /**

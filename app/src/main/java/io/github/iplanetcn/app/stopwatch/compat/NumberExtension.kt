@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.cherry.android.stopwatch.compat
+package io.github.iplanetcn.app.stopwatch.compat
 
 import android.content.res.Resources
 import android.util.TypedValue

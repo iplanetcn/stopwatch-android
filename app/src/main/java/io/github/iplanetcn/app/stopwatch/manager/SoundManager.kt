@@ -1,11 +1,11 @@
-package com.cherry.android.stopwatch.manager
+package io.github.iplanetcn.app.stopwatch.manager
 
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.SoundPool
-import com.cherry.android.stopwatch.R
-import com.cherry.android.stopwatch.SettingsActivity
+import io.github.iplanetcn.app.stopwatch.R
+import io.github.iplanetcn.app.stopwatch.SettingsActivity
 
 
 object SoundManager {

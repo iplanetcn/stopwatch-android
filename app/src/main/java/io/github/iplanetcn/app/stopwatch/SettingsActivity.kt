@@ -1,10 +1,10 @@
-package com.cherry.android.stopwatch
+package io.github.iplanetcn.app.stopwatch
 
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.cherry.android.stopwatch.compat.compatVibrator
-import com.cherry.android.stopwatch.databinding.ActivitySettingsBinding
+import io.github.iplanetcn.app.stopwatch.compat.compatVibrator
+import io.github.iplanetcn.app.stopwatch.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
