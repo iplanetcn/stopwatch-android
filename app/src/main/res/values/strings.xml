@@ -33,7 +33,7 @@
     <string name="settings_vibrate">Vibrations</string>
     <string name="settings_endless_alert">Extra Long Alert</string>
     <string name="settings_animations">Hand Animations</string>
-    <string name="settings_about_text">The Stopwatch</string>
+    <string name="settings_about_text">A Stopwatch implements by kotlin. \n\n The source code is available on <a href="https://github.com/iplanetcn/stopwatch-android">Github</a>.</string>
     <string name="settings_libraries_text">None</string>
     <string name="reset_time">Reset Time</string>
     <string name="audio_toggle">Audio Toggle</string>

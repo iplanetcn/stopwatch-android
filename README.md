@@ -1,10 +1,8 @@
 Stopwatch
 =================
 
-It's a application with stop-watch & countdown-watch. 
-
-Note
-----
+It's a application with stop-watch & countdown-watch.
 
 Screenshot
 ==========
+
