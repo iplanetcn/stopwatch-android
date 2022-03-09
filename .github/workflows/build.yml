@@ -55,14 +55,12 @@ jobs:
         with:
           name: apk
           path: ~/download/
-      - name: Echo download path
-        run: echo ${{steps.download.outputs.download-path}}
       - name: Display structure of downloaded files
         run: ls -R ~/download/
       - name: Create Release
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ~/download/apk
+          artifacts: ~/download/app-debug.apk
           artifactContentType: application/zip
           token: ${{ secrets.GITHUB_TOKEN }}
