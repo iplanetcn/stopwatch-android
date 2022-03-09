@@ -50,24 +50,16 @@ jobs:
     steps:
       - name: Download APK from build
         uses: actions/download-artifact@v3
+        id: download
         with:
           name: apk
+          path: ~/download/
+      - name: 'Echo download path'
+        run: echo ${{steps.download.outputs.download-path}}
       - name: Create Release
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: apk/app-debug.apkm
+          artifacts: ~/download/apk
           artifactContentType: application/zip
           token: ${{ secrets.GITHUB_TOKEN }}
-#          tag_name: ${{ github.ref }}
-#          release_name: Release ${{ github.ref }}
-#      - name: Upload Release APK
-#        id: upload_release_asset
-#        uses: actions/upload-release-asset@v1.0.1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: apk/app-debug.apk
-#          asset_name: MensaApp.apk
-#          asset_content_type: application/zip
