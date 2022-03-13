@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="stopwatch_dial_color">@color/white</color>
+    <color name="stopwatch_dial_bg_color">@color/black</color>
+    <color name="stopwatch_dial_small_color">@color/gray_600</color>
+    <color name="stopwatch_scales_outer_long_color">@color/white</color>
+    <color name="stopwatch_scales_outer_short_color">@color/gray_600</color>
+    <color name="stopwatch_scales_inner_large_color">#25AD6B</color>
+    <color name="stopwatch_scales_inner_small_color">@color/black</color>
+    <color name="stopwatch_seconds_color">@color/white</color>
+    <color name="stopwatch_minutes_color">@color/white</color>
+    <color name="stopwatch_numbers_color">#25AD6B</color>
+    <color name="stopwatch_hands_color">@color/white</color>
+</resources>

@@ -3,6 +3,7 @@
 package io.github.iplanetcn.app.stopwatch.compat
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -34,5 +35,14 @@ fun Context.startVibrate(milliseconds: Long) {
         } else {
             vibrator.vibrate(milliseconds)
         }
+    }
+}
+
+fun Context.isDark(): Boolean {
+    val nightModeFlags: Int = resources.configuration.uiMode and
+            Configuration.UI_MODE_NIGHT_MASK
+    return when (nightModeFlags) {
+        Configuration.UI_MODE_NIGHT_YES -> true
+        else -> false
     }
 }

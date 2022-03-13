@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.core.content.ContextCompat
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
@@ -104,7 +105,7 @@ class StopwatchView @JvmOverloads constructor(
     }
 
     private fun drawHand(canvas: Canvas, path: Path, angle: Float, pivot: PointF) {
-        paint.color = Color.BLACK
+        paint.color = ContextCompat.getColor(context, R.color.stopwatch_hands_color)
         paint.style = Paint.Style.FILL
         canvas.save()
         canvas.rotate(angle, pivot.x, pivot.y)
@@ -144,49 +145,46 @@ class StopwatchView @JvmOverloads constructor(
 
     private fun drawDial(canvas: Canvas) {
         // draw large dial
-        paint.color = Color.BLACK
+        paint.color = ContextCompat.getColor(context, R.color.stopwatch_dial_color)
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = 8f.dp
         canvas.drawCircle(pivotX, pivotY, largeRadius, paint)
 
-        paint.color = Color.WHITE
+        paint.color = ContextCompat.getColor(context, R.color.stopwatch_dial_bg_color)
         paint.strokeWidth = 4f.dp
         paint.isDither = true
         paint.pathEffect = DashPathEffect(floatArrayOf(20f, 20f), 0f)
         canvas.drawCircle(pivotX, pivotY, largeRadius, paint)
 
-        paint.color = Color.BLACK
+        paint.color = ContextCompat.getColor(context, R.color.stopwatch_dial_small_color)
         paint.isDither = false
         paint.pathEffect = null
         paint.strokeWidth = 2f.dp
-        paint.color = Color.LTGRAY
         canvas.drawCircle(pivotX, smallPivotY, smallRadius, paint)
 
-        paint.color = Color.BLACK
+        paint.color = ContextCompat.getColor(context, R.color.stopwatch_dial_color)
         paint.style = Paint.Style.FILL
         canvas.drawCircle(pivotX, pivotY, 30f, paint)
         canvas.drawCircle(pivotX, smallPivotY, 15f, paint)
     }
 
     private fun drawScales(canvas: Canvas) {
-
-
         canvas.save()
         repeat(240) {
             val scaleLength: Float = when {
                 it % 20 == 0 -> {
                     paint.strokeWidth = 6f
-                    paint.color = Color.BLACK
+                    paint.color = ContextCompat.getColor(context, R.color.stopwatch_scales_outer_long_color)
                     40f
                 }
                 it % 4 == 0 -> {
                     paint.strokeWidth = 2f
-                    paint.color = Color.LTGRAY
+                    paint.color = ContextCompat.getColor(context, R.color.stopwatch_scales_outer_short_color)
                     40f
                 }
                 else -> {
                     paint.strokeWidth = 1f
-                    paint.color = Color.LTGRAY
+                    paint.color = ContextCompat.getColor(context, R.color.stopwatch_scales_outer_short_color)
                     30f
                 }
             }
@@ -203,7 +201,7 @@ class StopwatchView @JvmOverloads constructor(
         canvas.restore()
 
         canvas.save()
-        paint.color = Color.rgb(155, 22, 29)
+        paint.color = ContextCompat.getColor(context, R.color.stopwatch_scales_inner_large_color)
         repeat(200) {
             val scaleLength: Float = when {
                 it % 10 == 0 -> {
@@ -234,7 +232,7 @@ class StopwatchView @JvmOverloads constructor(
         canvas.save()
         repeat(30) {
             paint.strokeWidth = 2f
-            paint.color = Color.LTGRAY
+            paint.color = ContextCompat.getColor(context, R.color.stopwatch_dial_small_color)
             val scaleLength = 20f
             canvas.drawLine(
                 pivotX,
@@ -251,7 +249,7 @@ class StopwatchView @JvmOverloads constructor(
     }
 
     private fun drawMinutes(canvas: Canvas) {
-        paint.color = Color.DKGRAY
+        paint.color = ContextCompat.getColor(context, R.color.stopwatch_minutes_color)
         paint.style = Paint.Style.FILL
         paint.textSize = 12f.sp
         val labelRadius = smallRadius - 40f
@@ -277,7 +275,7 @@ class StopwatchView @JvmOverloads constructor(
     }
 
     private fun drawNumbers(canvas: Canvas) {
-        paint.color = Color.rgb(155, 22, 29)
+        paint.color = ContextCompat.getColor(context, R.color.stopwatch_numbers_color)
         paint.style = Paint.Style.FILL
         paint.textSize = 14f.sp
         val labelRadius = largeRadius - 80f
@@ -304,7 +302,7 @@ class StopwatchView @JvmOverloads constructor(
     }
 
     private fun drawSeconds(canvas: Canvas) {
-        paint.color = Color.BLACK
+        paint.color = ContextCompat.getColor(context, R.color.stopwatch_seconds_color)
         paint.style = Paint.Style.FILL
         paint.textSize = 18f.sp
         val labelRadius = largeRadius + RADIUS_OFFSET_LABEL
