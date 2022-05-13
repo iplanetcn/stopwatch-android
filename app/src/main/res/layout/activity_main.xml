@@ -20,6 +20,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:theme="@style/Theme.Material3.DayNight"
             app:navigationIcon="@drawable/ic_stopwatch"
             app:popupTheme="@style/Theme.Stopwatch.PopupOverlay" />
 

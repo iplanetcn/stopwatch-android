@@ -27,14 +27,10 @@
                 android:id="@+id/tab_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center|bottom"
+                android:layout_gravity="center"
                 android:contentDescription="@string/content_desc_tab_layout"
                 app:tabMode="auto"
-                app:tabBackground="?colorPrimary"
-                app:tabTextColor="@color/gray_400"
-                app:tabSelectedTextColor="@color/white"
-                app:tabIndicatorColor="@color/white"
-                app:tabIndicatorHeight="8dp"/>
+                app:tabIndicatorHeight="4dp"/>
         </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>

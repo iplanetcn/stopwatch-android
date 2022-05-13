@@ -23,13 +23,12 @@ class LapTimesAdapter(
 
     //region Implementations
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LapTimesViewHolder {
-        return LapTimesViewHolder(
-            ItemLapTimesBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+        val binding = ItemLapTimesBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
         )
+        return LapTimesViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: LapTimesViewHolder, position: Int) {
