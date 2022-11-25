@@ -28,6 +28,8 @@
         android:text="@string/default_time"
         android:textColor="@color/text_grey"
         android:textSize="@dimen/counter_font"
+        android:clickable="true"
+        android:focusable="true"
         custom:layout_constraintEnd_toEndOf="parent"
         custom:layout_constraintStart_toStartOf="parent"
         custom:layout_constraintTop_toTopOf="parent" />
@@ -40,6 +42,7 @@
         custom:layout_constraintBottom_toTopOf="@+id/barrier"
         custom:layout_constraintEnd_toEndOf="parent"
         custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintDimensionRatio="1:1"
         custom:layout_constraintTop_toBottomOf="@+id/time_counter"
         custom:watchType="Countdown" />
 

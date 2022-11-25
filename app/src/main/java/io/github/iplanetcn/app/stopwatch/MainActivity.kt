@@ -168,8 +168,10 @@ class MainActivity : AppCompatActivity() {
                 {
                     val item = menu.findItem(R.id.menu_reset_time)
                     item.setActionView(R.layout.toolbar_set_time_animation)
-                    val iv = item.actionView.findViewById<ImageView>(R.id.set_time_imageview)
-                    (iv.drawable as AnimationDrawable).start()
+                    item.actionView?.findViewById<ImageView>(R.id.set_time_imageview)?.let {
+                        (it.drawable as AnimationDrawable).start()
+                    }
+
 
                     MainScope().launch {
                         withContext(Dispatchers.Default) {

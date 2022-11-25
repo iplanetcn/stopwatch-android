@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="med_font">22sp</dimen>
-    <dimen name="counter_font">50sp</dimen>
+    <dimen name="counter_font">48sp</dimen>
     <dimen name="bottom_bar_portrait_button_font_size">16sp</dimen>
 </resources>

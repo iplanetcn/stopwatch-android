@@ -37,10 +37,10 @@ class CountdownFragment : Fragment() {
     private var mLastSec = 0
     private var mRunningState = false
     private var mLastSecondTicked = 0
-
-    private lateinit var binding: FragmentCountdownBinding
-
     private var mDialogOnScreen = false
+    private lateinit var binding: FragmentCountdownBinding
+    val isRunning get() = binding.countdownWatchView.isRunning
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,7 +48,7 @@ class CountdownFragment : Fragment() {
     ): View {
         binding = FragmentCountdownBinding.inflate(inflater, container, false)
         binding.timeCounter.setOnTouchListener { _, _ ->
-            if (mCurrentTimeMillis == 0.0) {
+            if (!isRunning) {
                 requestTimeDialog()
             }
             true
@@ -188,8 +188,6 @@ class CountdownFragment : Fragment() {
             true
         )
     }
-
-    val isRunning get() = binding.countdownWatchView.isRunning
 
     private fun setUIState(disableReset: Boolean) {
         val stateChanged = mRunningState != isRunning
