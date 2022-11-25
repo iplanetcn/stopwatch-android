@@ -14,9 +14,10 @@ object LapTimeRecorder {
         cxt.getSharedPreferences(PREFS_NAME_LAP_TIMES, Context.MODE_PRIVATE).apply {
             var lapTimeNum = 0
             mLapTimes.clear()
-            val lt = 0.0
+            var lt = 0.0
             var prevZero = false
-            while (getLong(KEY_LAP_TIME_X + lapTimeNum, -1L).toDouble() != -1.0) {
+            while (lt != -1.0) {
+                lt = getLong(KEY_LAP_TIME_X + lapTimeNum, -1L).toDouble()
                 lapTimeNum++
                 prevZero = if (lt == 0.0 && prevZero) {
                     continue

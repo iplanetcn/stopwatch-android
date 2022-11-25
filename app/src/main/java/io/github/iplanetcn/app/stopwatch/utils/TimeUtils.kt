@@ -3,7 +3,6 @@ package io.github.iplanetcn.app.stopwatch.utils
 import android.content.Context
 import android.text.SpannableString
 import android.text.style.TextAppearanceSpan
-import android.util.Log
 import io.github.iplanetcn.app.stopwatch.R
 import timber.log.Timber
 import kotlin.math.floor
@@ -58,7 +57,7 @@ object TimeUtils {
                 }
                 sString = SpannableString(timeText)
                 if (lastLightChar > 0) {
-                    if (lastLightChar > 0) sString.setSpan(
+                    sString.setSpan(
                         TextAppearanceSpan(
                             context,
                             if (lightTheme) R.style.TimeTextLight else R.style.TimeTextDarkThemeDark

@@ -174,17 +174,20 @@ class StopwatchView @JvmOverloads constructor(
             val scaleLength: Float = when {
                 it % 20 == 0 -> {
                     paint.strokeWidth = 6f
-                    paint.color = ContextCompat.getColor(context, R.color.stopwatch_scales_outer_long_color)
+                    paint.color =
+                        ContextCompat.getColor(context, R.color.stopwatch_scales_outer_long_color)
                     40f
                 }
                 it % 4 == 0 -> {
                     paint.strokeWidth = 2f
-                    paint.color = ContextCompat.getColor(context, R.color.stopwatch_scales_outer_short_color)
+                    paint.color =
+                        ContextCompat.getColor(context, R.color.stopwatch_scales_outer_short_color)
                     40f
                 }
                 else -> {
                     paint.strokeWidth = 1f
-                    paint.color = ContextCompat.getColor(context, R.color.stopwatch_scales_outer_short_color)
+                    paint.color =
+                        ContextCompat.getColor(context, R.color.stopwatch_scales_outer_short_color)
                     30f
                 }
             }
@@ -264,7 +267,8 @@ class StopwatchView @JvmOverloads constructor(
             val labelBounds = Rect()
             paint.getTextBounds(label, 0, label.length, labelBounds)
             val centerX = (labelRadius * cos(angle)).toFloat() + width / 2 - labelBounds.width() / 2
-            val centerY = (labelRadius * sin(angle)).toFloat() + smallPivotY + labelBounds.height() / 2
+            val centerY =
+                (labelRadius * sin(angle)).toFloat() + smallPivotY + labelBounds.height() / 2
             canvas.drawText(
                 label,
                 centerX,
@@ -419,15 +423,15 @@ class StopwatchView @JvmOverloads constructor(
         toAngle: Float,
         resetting: Boolean
     ): Float {
-        return if (resetting && isStopwatch) // hands must always go backwards
-        {
-            toAngle // stopwatch reset always returns to 0,
-        } else if (resetting && !isStopwatch) //hands must always go forwards
-        {
-            //countdown reset can be to any clock position, ensure CW rotation
-            if (toAngle > fromAngle) toAngle else toAngle + PI.toFloat() * 2
-        } else  //not resetting hands must take shortest route
-        {
+
+        return if (resetting) {
+            if (isStopwatch) { // hands must always go backwards
+                toAngle // stopwatch reset always returns to 0,
+            } else { //hands must always go forwards
+                //countdown reset can be to any clock position, ensure CW rotation
+                if (toAngle > fromAngle) toAngle else toAngle + PI.toFloat() * 2
+            }
+        } else { //not resetting hands must take shortest route
             val absFromMinusTo = abs(fromAngle - toAngle)
             //toAngle-twoPi, toAngle, toAngle+twoPi
             if (absFromMinusTo < abs(fromAngle - (toAngle + PI.toFloat() * 2))) {

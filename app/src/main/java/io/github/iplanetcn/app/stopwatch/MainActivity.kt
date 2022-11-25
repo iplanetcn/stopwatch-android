@@ -161,17 +161,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreateOptionsMenu(menu)
         val inflater = menuInflater
         when (binding.tabLayout.selectedTabPosition) {
+            0 -> inflater.inflate(R.menu.menu_stopwatch, menu)
             1 -> inflater.inflate(R.menu.menu_laptimes, menu)
             2 -> {
                 inflater.inflate(R.menu.menu_countdown, menu)
-                if (mFlashResetIcon) //icon hint for set countdown time
-                {
+                if (mFlashResetIcon) { // icon hint for set countdown time
                     val item = menu.findItem(R.id.menu_reset_time)
                     item.setActionView(R.layout.toolbar_set_time_animation)
                     item.actionView?.findViewById<ImageView>(R.id.set_time_imageview)?.let {
                         (it.drawable as AnimationDrawable).start()
                     }
-
 
                     MainScope().launch {
                         withContext(Dispatchers.Default) {
@@ -182,8 +181,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            0 -> inflater.inflate(R.menu.menu_stopwatch, menu)
-            else -> inflater.inflate(R.menu.menu_stopwatch, menu)
         }
 
         //get audio icon and set correct variant
