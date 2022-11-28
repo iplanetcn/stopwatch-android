@@ -53,7 +53,7 @@ class StopwatchView @JvmOverloads constructor(
     var isRunning: Boolean = false
         private set
 
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private var paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         textAlign = Paint.Align.LEFT
         textSize = 20f.sp
@@ -105,13 +105,11 @@ class StopwatchView @JvmOverloads constructor(
     }
 
     private fun drawHand(canvas: Canvas, path: Path, angle: Float, pivot: PointF) {
-        paint.color = ContextCompat.getColor(context, R.color.stopwatch_hands_color)
-        paint.style = Paint.Style.FILL
+//        paint.color = ContextCompat.getColor(context, R.color.stopwatch_hands_color)
+//        paint.style = Paint.Style.FILL
         canvas.save()
         canvas.rotate(angle, pivot.x, pivot.y)
-        canvas.save()
         canvas.drawPath(path, paint)
-        canvas.restore()
         canvas.restore()
     }
 
@@ -162,7 +160,7 @@ class StopwatchView @JvmOverloads constructor(
         paint.strokeWidth = 2f.dp
         canvas.drawCircle(pivotX, smallPivotY, smallRadius, paint)
 
-        paint.color = ContextCompat.getColor(context, R.color.stopwatch_dial_color)
+        paint.color = ContextCompat.getColor(context, R.color.stopwatch_scales_inner_large_color)
         paint.style = Paint.Style.FILL
         canvas.drawCircle(pivotX, pivotY, 30f, paint)
         canvas.drawCircle(pivotX, smallPivotY, 15f, paint)

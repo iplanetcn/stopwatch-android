@@ -37,10 +37,6 @@ class MainActivity : AppCompatActivity() {
     private var mMenu: Menu? = null
     private var mFlashResetIcon = false
 
-    /**
-     * Called when the activity is first created.
-     */
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
