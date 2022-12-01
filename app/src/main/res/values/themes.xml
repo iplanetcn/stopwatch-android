@@ -54,7 +54,6 @@
         <item name="titleTextStyle">@style/TextAppearance.AppCompat.Title</item>
     </style>
 
-    <style name="Theme.Stopwatch.AppBarOverlay" parent="ThemeOverlay.Material3.Dark.ActionBar" />
-
+    <style name="Theme.Stopwatch.AppBarOverlay" parent="ThemeOverlay.Material3.Light" />
     <style name="Theme.Stopwatch.PopupOverlay" parent="ThemeOverlay.Material3.Light" />
 </resources>
