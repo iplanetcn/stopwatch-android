@@ -1,6 +1,6 @@
-# Stopwatch
+## Description
 
-It's a application with stop-watch & countdown-watch.
+Stopwatch is an application with stop-watch & countdown-watch.
 
 ## Screenshot
 
@@ -12,16 +12,16 @@ It's a application with stop-watch & countdown-watch.
 
 ## Todo List
 
-### Theme
-- [ ] Support Dark Mode
-### Multiple Language Support
-- [x] English
-- [x] Chinese Simplify
-- [ ] Chinese Traditional
-- [ ] French
-- [ ] Spanish
-- [ ] Japanese
-- [ ] Korea
-- [ ] Russia
-### Architecture
-- [ ] MVVM Refactor
+- Theme
+  - [ ] Support Dark Mode
+- Multiple Language Support
+  - [x] English
+  - [x] Chinese Simplify
+  - [ ] Chinese Traditional
+  - [ ] French
+  - [ ] Spanish
+  - [ ] Japanese
+  - [ ] Korea
+  - [ ] Russia
+- Architecture
+  - [ ] MVVM Refactor
