@@ -1,10 +1,9 @@
 # Stopwatch
-===
 
 It's a application with stop-watch & countdown-watch.
 
-### Screenshot
-===
+## Screenshot
+---
 
 ![screenshot](./screenshot/phone/Screenshot_01.png)
 
@@ -12,11 +11,11 @@ It's a application with stop-watch & countdown-watch.
 
 ![screenshot](./screenshot/phone/Screenshot_03.png)
 
-### Todo List
-===
-##### Theme
+## Todo List
+---
+### Theme
 - [ ] Support Dark Mode
-##### Multiple Language Support
+### Multiple Language Support
 - [x] English
 - [x] Chinese Simplify
 - [ ] Chinese Traditional
@@ -25,5 +24,5 @@ It's a application with stop-watch & countdown-watch.
 - [ ] Japanese
 - [ ] Korea
 - [ ] Russia
-##### Architecture
+### Architecture
 - [ ] MVVM Refactor
