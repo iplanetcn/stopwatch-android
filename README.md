@@ -3,7 +3,6 @@
 It's a application with stop-watch & countdown-watch.
 
 ## Screenshot
----
 
 ![screenshot](./screenshot/phone/Screenshot_01.png)
 
@@ -12,7 +11,7 @@ It's a application with stop-watch & countdown-watch.
 ![screenshot](./screenshot/phone/Screenshot_03.png)
 
 ## Todo List
----
+
 ### Theme
 - [ ] Support Dark Mode
 ### Multiple Language Support
