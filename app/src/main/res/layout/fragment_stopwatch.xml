@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -28,7 +29,8 @@
         android:textSize="@dimen/counter_font"
         custom:layout_constraintEnd_toEndOf="parent"
         custom:layout_constraintStart_toStartOf="parent"
-        custom:layout_constraintTop_toTopOf="parent" />
+        custom:layout_constraintTop_toTopOf="parent"
+        tools:gravity="center" />
 
     <io.github.iplanetcn.app.stopwatch.widget.StopwatchView
         android:id="@+id/stopwatch_view"
@@ -36,11 +38,11 @@
         android:layout_height="0dp"
         android:layout_below="@id/counter_text"
         custom:layout_constraintBottom_toTopOf="@+id/barrier"
+        custom:layout_constraintDimensionRatio="1:1"
         custom:layout_constraintEnd_toEndOf="parent"
         custom:layout_constraintStart_toStartOf="parent"
         custom:layout_constraintTop_toBottomOf="@+id/counter_text"
-        custom:watchType="Stopwatch"
-        custom:layout_constraintDimensionRatio="1:1"/>
+        custom:watchType="Stopwatch" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/startButton"

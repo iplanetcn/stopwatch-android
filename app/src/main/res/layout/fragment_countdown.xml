@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/countdown_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -24,15 +25,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:focusable="true"
         android:fontFamily="sans-serif-light"
         android:text="@string/default_time"
         android:textColor="@color/text_grey"
         android:textSize="@dimen/counter_font"
-        android:clickable="true"
-        android:focusable="true"
         custom:layout_constraintEnd_toEndOf="parent"
         custom:layout_constraintStart_toStartOf="parent"
-        custom:layout_constraintTop_toTopOf="parent" />
+        custom:layout_constraintTop_toTopOf="parent"
+        tools:gravity="center" />
 
     <io.github.iplanetcn.app.stopwatch.widget.StopwatchView
         android:id="@+id/countdown_watch_view"
@@ -40,9 +42,9 @@
         android:layout_height="0dp"
         android:layout_below="@id/time_counter"
         custom:layout_constraintBottom_toTopOf="@+id/barrier"
+        custom:layout_constraintDimensionRatio="1:1"
         custom:layout_constraintEnd_toEndOf="parent"
         custom:layout_constraintStart_toStartOf="parent"
-        custom:layout_constraintDimensionRatio="1:1"
         custom:layout_constraintTop_toBottomOf="@+id/time_counter"
         custom:watchType="Countdown" />
 
