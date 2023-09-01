@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Stopwatch.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_screen_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/avd_logo</item>
+        <item name="windowSplashScreenAnimationDuration">@integer/duration_splash_animation</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/ic_brand</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/stopwatch_dial_bg_color</item>
+        <item name="postSplashScreenTheme">@style/Theme.Stopwatch</item>
+    </style>
+</resources>

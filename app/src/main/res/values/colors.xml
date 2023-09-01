@@ -23,6 +23,7 @@
     <color name="stopwatch_minutes_color">@color/black</color>
     <color name="stopwatch_numbers_color">#9B161D</color>
     <color name="stopwatch_hands_color">@color/black</color>
+    <color name="splash_screen_background">@color/white</color>
     <!-- theme colors -->
     <color name="md_theme_light_primary">#6750A4</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>

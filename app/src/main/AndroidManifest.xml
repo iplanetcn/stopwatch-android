@@ -35,14 +35,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Stopwatch">
         <activity
-            android:name=".MainActivity"
+            android:name=".RoutingActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustNothing">
+            android:theme="@style/Theme.Stopwatch.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing"/>
 
         <activity
             android:name=".SettingsActivity"

@@ -11,4 +11,6 @@
     <color name="stopwatch_minutes_color">@color/white</color>
     <color name="stopwatch_numbers_color">#25AD6B</color>
     <color name="stopwatch_hands_color">@color/white</color>
+    <color name="splash_screen_background">#221F1F</color>
+
 </resources>

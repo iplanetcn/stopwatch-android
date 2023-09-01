@@ -1,6 +1,7 @@
 package io.github.iplanetcn.app.stopwatch
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
@@ -13,7 +14,6 @@ import android.os.PowerManager.WakeLock
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import io.github.iplanetcn.app.stopwatch.databinding.ActivityMainBinding
@@ -27,7 +27,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private var mPowerMan: PowerManager? = null
     private var mWakeLock: WakeLock? = null
@@ -244,5 +244,12 @@ class MainActivity : AppCompatActivity() {
         private const val KEY_JUMP_TO_PAGE = "key_start_page"
         private const val WAKE_LOCK_KEY = "stopwatch"
         const val PREFS_NAME = "USW_PREFS"
+
+        @JvmStatic
+        fun start(context: Context) {
+            val starter = Intent(context, MainActivity::class.java)
+                .putExtra("start", true)
+            context.startActivity(starter)
+        }
     }
 }

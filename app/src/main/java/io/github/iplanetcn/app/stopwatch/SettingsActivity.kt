@@ -2,11 +2,10 @@ package io.github.iplanetcn.app.stopwatch
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import io.github.iplanetcn.app.stopwatch.compat.compatVibrator
 import io.github.iplanetcn.app.stopwatch.databinding.ActivitySettingsBinding
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
     private lateinit var binding: ActivitySettingsBinding
 
     public override fun onCreate(savedInstanceState: Bundle?) {

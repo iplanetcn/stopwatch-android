@@ -56,4 +56,12 @@
 
     <style name="Theme.Stopwatch.AppBarOverlay" parent="ThemeOverlay.Material3.Light" />
     <style name="Theme.Stopwatch.PopupOverlay" parent="ThemeOverlay.Material3.Light" />
+    <style name="Theme.Stopwatch.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_screen_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenAnimationDuration">@integer/duration_splash_animation</item>
+        <item name="postSplashScreenTheme">@style/Theme.Stopwatch</item>
+    </style>
+
+    <integer name="duration_splash_animation">600</integer>
 </resources>
