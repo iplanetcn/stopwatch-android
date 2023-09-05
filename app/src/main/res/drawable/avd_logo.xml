@@ -2,6 +2,6 @@
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:drawable="@drawable/ic_launcher_foreground" >
     <target
-        android:name="fruit"
+        android:name="stopwatch"
         android:animation="@animator/rotation" />
 </animated-vector>

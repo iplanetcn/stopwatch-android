@@ -62,6 +62,4 @@
         <item name="windowSplashScreenAnimationDuration">@integer/duration_splash_animation</item>
         <item name="postSplashScreenTheme">@style/Theme.Stopwatch</item>
     </style>
-
-    <integer name="duration_splash_animation">600</integer>
 </resources>

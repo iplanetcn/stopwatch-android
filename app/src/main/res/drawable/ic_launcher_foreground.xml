@@ -3,7 +3,9 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-  <group android:scaleX="0.13078125"
+  <group
+      android:name="stopwatch"
+      android:scaleX="0.13078125"
       android:scaleY="0.13078125"
       android:translateX="20.52"
       android:translateY="20.52">
