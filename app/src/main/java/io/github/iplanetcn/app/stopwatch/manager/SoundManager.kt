@@ -29,8 +29,7 @@ object SoundManager {
     }
 
     fun init(context: Context) {
-        soundPoolMap[Sounds.SOUND_COUNTDOWN_ALARM] =
-            soundPool.load(context, R.raw.countdown_alarm, 1)
+        soundPoolMap[Sounds.SOUND_COUNTDOWN_ALARM] = soundPool.load(context, R.raw.countdown_alarm, 1)
         soundPoolMap[Sounds.SOUND_LAP_TIME] = soundPool.load(context, R.raw.lap_time, 1)
         soundPoolMap[Sounds.SOUND_RESET] = soundPool.load(context, R.raw.reset_watch, 1)
         soundPoolMap[Sounds.SOUND_START] = soundPool.load(context, R.raw.start, 1)
