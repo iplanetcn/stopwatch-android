@@ -166,9 +166,13 @@ class MainActivity : BaseActivity() {
                     val item = menu.findItem(R.id.menu_reset_time)
                     item.setActionView(R.layout.toolbar_set_time_animation)
                     item.actionView?.findViewById<ImageView>(R.id.set_time_imageview)?.let {
-                        (it.drawable as AnimationDrawable).start()
+                        (it.drawable as AnimationDrawable).apply {
+                            start()
+                        }
                         val shakingAnimation = AnimationUtils.loadAnimation(this@MainActivity, R.anim.shaking)
-                        it.startAnimation(shakingAnimation)
+                        it.apply {
+                            startAnimation(shakingAnimation)
+                        }
                     }
 
                     MainScope().launch {
@@ -235,6 +239,9 @@ class MainActivity : BaseActivity() {
     }
 
     fun flashResetTimeIcon() {
+        if (mFlashResetIcon) {
+            return
+        }
         mFlashResetIcon = true
         invalidateOptionsMenu()
     }
