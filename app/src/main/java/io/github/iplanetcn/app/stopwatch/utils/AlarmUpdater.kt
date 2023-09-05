@@ -2,14 +2,17 @@
 
 package io.github.iplanetcn.app.stopwatch.utils
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.IBinder
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import io.github.iplanetcn.app.stopwatch.MainActivity
@@ -95,6 +98,20 @@ object AlarmUpdater {
             )
             NotificationManagerCompat.from(context).createNotificationChannel(notificationChannel)
         }
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         NotificationManagerCompat.from(context).notify(NOTIFICATION_STOPWATCH_TAG, NOTIFICATION_STOPWATCH_ID, notification)
     }
 
@@ -160,6 +177,21 @@ object AlarmUpdater {
                         .build()
                 )
                 NotificationManagerCompat.from(this).createNotificationChannel(notificationChannel)
+            }
+
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return
             }
 
             NotificationManagerCompat.from(this).notify(NOTIFICATION_COUNTDOWN_TAG, NOTIFICATION_COUNTDOWN_ID, notification)

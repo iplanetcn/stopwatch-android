@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.util.remove
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
+import io.github.iplanetcn.app.stopwatch.compat.isDark
 import io.github.iplanetcn.app.stopwatch.databinding.ItemLapTimeBinding
 import io.github.iplanetcn.app.stopwatch.databinding.ItemLapTimesBinding
 import io.github.iplanetcn.app.stopwatch.utils.TimeUtils
@@ -108,6 +109,7 @@ class LapTimesAdapter(
     //region LapTimesViewHolder
     class LapTimesViewHolder(val binding: ItemLapTimesBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        private val isLight = !binding.root.context.isDark()
         fun bindData(item: LapTimeBlock) {
             binding.lapTimesContainer.removeAllViews()
             val lapTimes = item.lapTimes
@@ -117,7 +119,7 @@ class LapTimesAdapter(
                     subBinding.lapTimeMomentText.text = TimeUtils.createStyledSpannableString(
                         itemView.context,
                         lapTimes[i],
-                        true
+                        isLight
                     )
                 }
                 if (i < lapTimes.size - 1 && lapTimes.size > 1) {
@@ -126,13 +128,13 @@ class LapTimesAdapter(
                     subBinding.lapTimeDurationText.text = TimeUtils.createStyledSpannableString(
                         itemView.context,
                         lapTime,
-                        true
+                        isLight
                     )
                 } else {
                     subBinding.lapTimeDurationText.text = TimeUtils.createStyledSpannableString(
                         itemView.context,
                         lapTimes[i],
-                        true
+                        isLight
                     )
                 }
                 binding.lapTimesContainer.addView(subBinding.root)

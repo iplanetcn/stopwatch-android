@@ -13,6 +13,7 @@ import android.os.PowerManager
 import android.os.PowerManager.WakeLock
 import android.view.Menu
 import android.view.MenuItem
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -166,6 +167,8 @@ class MainActivity : BaseActivity() {
                     item.setActionView(R.layout.toolbar_set_time_animation)
                     item.actionView?.findViewById<ImageView>(R.id.set_time_imageview)?.let {
                         (it.drawable as AnimationDrawable).start()
+                        val shakingAnimation = AnimationUtils.loadAnimation(this@MainActivity, R.anim.shaking)
+                        it.startAnimation(shakingAnimation)
                     }
 
                     MainScope().launch {

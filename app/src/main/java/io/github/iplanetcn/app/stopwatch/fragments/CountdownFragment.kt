@@ -13,7 +13,6 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
@@ -29,6 +28,7 @@ import io.github.iplanetcn.app.stopwatch.utils.AlarmUpdater
 import io.github.iplanetcn.app.stopwatch.utils.TimeUtils
 import io.github.iplanetcn.app.stopwatch.MainActivity
 import io.github.iplanetcn.app.stopwatch.SettingsActivity
+import io.github.iplanetcn.app.stopwatch.compat.isDark
 
 class CountdownFragment : Fragment() {
     private var mCurrentTimeMillis = 0.0
@@ -47,23 +47,18 @@ class CountdownFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCountdownBinding.inflate(inflater, container, false)
-        binding.timeCounter.setOnTouchListener { _, _ ->
+        binding.timeCounter.setOnClickListener {
             if (!isRunning) {
                 requestTimeDialog()
             }
-            true
         }
         binding.resetButton.setOnClickListener {
             reset()
             SoundManager.stopEndlessAlarm()
             SoundManager.playSound(requireContext(), Sounds.SOUND_RESET)
         }
-        binding.startButton.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                startStop()
-                return@setOnTouchListener false
-            }
-            false
+        binding.startButton.setOnClickListener {
+            startStop()
         }
         return binding.root
     }
@@ -157,7 +152,10 @@ class CountdownFragment : Fragment() {
     private fun startStop() {
         if (!isRunning && mCurrentTimeMillis == 0.0) {
             //flash the choose time button in the action bar
-            (activity as MainActivity?)!!.flashResetTimeIcon()
+            (activity as MainActivity).flashResetTimeIcon()
+            if (SettingsActivity.isVibrate && activity != null) {
+                requireContext().startVibrate(1000)
+            }
         } else {
             binding.countdownWatchView.startStop()
             binding.resetButton.isEnabled = true
@@ -185,7 +183,7 @@ class CountdownFragment : Fragment() {
         binding.timeCounter.text = TimeUtils.createStyledSpannableString(
             activity,
             millis,
-            true
+            !requireContext().isDark()
         )
     }
 

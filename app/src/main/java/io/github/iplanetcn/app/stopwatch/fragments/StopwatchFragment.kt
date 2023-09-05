@@ -11,12 +11,12 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import io.github.iplanetcn.app.stopwatch.MainActivity
 import io.github.iplanetcn.app.stopwatch.R
+import io.github.iplanetcn.app.stopwatch.compat.isDark
 import io.github.iplanetcn.app.stopwatch.databinding.FragmentStopwatchBinding
 import io.github.iplanetcn.app.stopwatch.manager.SoundManager
 import io.github.iplanetcn.app.stopwatch.manager.Sounds
@@ -43,11 +43,8 @@ class StopwatchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.startButton.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                startStop()
-            }
-            false
+        binding.startButton.setOnClickListener {
+            startStop()
         }
         binding.resetButton.setOnClickListener {
             LapTimeRecorder.stopwatchReset()
@@ -145,7 +142,7 @@ class StopwatchFragment : Fragment() {
 
     private fun setTime(millis: Double) {
         binding.counterText.text = TimeUtils.createStyledSpannableString(
-            activity, millis, true
+            activity, millis, !requireContext().isDark()
         )
     }
 
