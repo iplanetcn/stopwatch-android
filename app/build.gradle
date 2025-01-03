@@ -1,15 +1,16 @@
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.google.services)
 }
 android {
-    compileSdk 34
+    compileSdk 35
     namespace "io.github.iplanetcn.app.stopwatch"
 
     defaultConfig {
         applicationId "io.github.iplanetcn.app.stopwatch"
         minSdk 23
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -58,9 +59,9 @@ dependencies {
     implementation libs.kotlinx.coroutines.android
     implementation libs.kotlin.reflect
     implementation libs.gson
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.analytics
     testImplementation libs.junit
-    androidTestImplementation platform(libs.androidx.compose.bom)
     androidTestImplementation libs.androidx.test.ext.junit
     androidTestImplementation libs.espresso.core
-    androidTestImplementation libs.androidx.compose.ui.test.junit4
 }

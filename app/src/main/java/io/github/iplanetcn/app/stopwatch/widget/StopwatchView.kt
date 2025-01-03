@@ -449,7 +449,7 @@ class StopwatchView @JvmOverloads constructor(
             if (isRunning) {
                 invalidate()
                 removeCallbacks(this)
-                ViewCompat.postOnAnimation(this@StopwatchView, this)
+                this@StopwatchView.postOnAnimation(this)
             }
         }
     }

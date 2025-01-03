@@ -26,9 +26,15 @@ import io.github.iplanetcn.app.stopwatch.utils.AlarmUpdater
 import io.github.iplanetcn.app.stopwatch.utils.LapTimeRecorder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.FirebaseApp
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.logEvent
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 
 class MainActivity : BaseActivity() {
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var binding: ActivityMainBinding
     private var mPowerMan: PowerManager? = null
     private var mWakeLock: WakeLock? = null
@@ -43,6 +49,7 @@ class MainActivity : BaseActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+        firebaseAnalytics = Firebase.analytics
         window.setBackgroundDrawable(null)
         title = getString(R.string.app_name)
         binding.viewpager.offscreenPageLimit = 2
@@ -102,6 +109,13 @@ class MainActivity : BaseActivity() {
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 invalidateOptionsMenu()
+                tab?.apply {
+                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+                        param(FirebaseAnalytics.Param.ITEM_ID, id.toLong())
+                        param(FirebaseAnalytics.Param.ITEM_NAME, text.toString())
+                        param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+                    }
+                }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
