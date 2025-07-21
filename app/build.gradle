@@ -4,15 +4,15 @@ plugins {
     alias(libs.plugins.google.services)
 }
 android {
-    compileSdk 35
+    compileSdk 36
     namespace "io.github.iplanetcn.app.stopwatch"
 
     defaultConfig {
         applicationId "io.github.iplanetcn.app.stopwatch"
         minSdk 23
-        targetSdk 35
-        versionCode 1
-        versionName "1.0"
+        targetSdk 36
+        versionCode 20250721
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,8 +29,8 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = '17'
+    kotlin {
+        jvmToolchain(17)
     }
 
     buildFeatures {

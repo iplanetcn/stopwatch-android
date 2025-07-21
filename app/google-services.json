@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "375063334611",
+    "firebase_url": "https://garden-5486d.firebaseio.com",
+    "project_id": "garden-5486d",
+    "storage_bucket": "garden-5486d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375063334611:android:329bb2c62fb94783574e26",
+        "android_client_info": {
+          "package_name": "io.github.iplanetcn.app.stopwatch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfdeC2churbgc8hlmLJ-refXy4tznqZR8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

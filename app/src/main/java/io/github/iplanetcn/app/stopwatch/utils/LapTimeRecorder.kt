@@ -51,7 +51,7 @@ object LapTimeRecorder {
     }
 
     fun stopwatchReset() {
-        if (mLapTimes.size > 0 && mLapTimes[0] == 0.0) return
+        if (mLapTimes.isNotEmpty() && mLapTimes[0] == 0.0) return
         mLapTimes.clear()
     }
 

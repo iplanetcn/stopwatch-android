@@ -12,6 +12,7 @@ import io.github.iplanetcn.app.stopwatch.compat.isDark
 import io.github.iplanetcn.app.stopwatch.databinding.ItemLapTimeBinding
 import io.github.iplanetcn.app.stopwatch.databinding.ItemLapTimesBinding
 import io.github.iplanetcn.app.stopwatch.utils.TimeUtils
+import androidx.core.util.size
 
 class LapTimesAdapter(
     private val data: ArrayList<LapTimeBlock>,
@@ -63,7 +64,7 @@ class LapTimesAdapter(
     }
 
     fun getSelectedItemCount(): Int {
-        return selectedItems.size()
+        return selectedItems.size
     }
 
     fun toggleSelection(position: Int) {
@@ -80,7 +81,7 @@ class LapTimesAdapter(
 
     fun getSelectedItems(): ArrayList<Int> {
         val items = ArrayList<Int>()
-        for (i in 0 until selectedItems.size()) {
+        for (i in 0 until selectedItems.size) {
             items.add(selectedItems.keyAt(i))
         }
         return items
@@ -122,7 +123,7 @@ class LapTimesAdapter(
                         isLight
                     )
                 }
-                if (i < lapTimes.size - 1 && lapTimes.size > 1) {
+                if (i < lapTimes.size - 1) {
                     var lapTime = lapTimes[i] - lapTimes[i + 1]
                     if (lapTime < 0) lapTime = lapTimes[i]
                     subBinding.lapTimeDurationText.text = TimeUtils.createStyledSpannableString(

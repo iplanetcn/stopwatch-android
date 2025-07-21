@@ -9,8 +9,8 @@ import kotlin.math.floor
 
 object TimeUtils {
     private const val START_TIME = "00:00:00.000"
-    private fun createTimeString(_time: Double): String {
-        var time = _time
+    private fun createTimeString(pTime: Double): String {
+        var time = pTime
         if (time == 0.0) return START_TIME
         var isNeg = false
         if (time < 0) {
@@ -72,7 +72,7 @@ object TimeUtils {
                 }
             }
         } catch (e: Exception) {
-            Timber.e("USW", "Switched Fragment Error", e)
+            Timber.e(e,"USW%s", "Switched Fragment Error")
         }
         return sString
     }

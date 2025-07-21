@@ -18,7 +18,6 @@ import androidx.core.app.NotificationManagerCompat
 import io.github.iplanetcn.app.stopwatch.MainActivity
 import io.github.iplanetcn.app.stopwatch.R
 
-
 object AlarmUpdater {
     const val INTENT_EXTRA_LAUNCH_COUNTDOWN = "launch_countdown"
     const val CHANNEL_ID = "STOPWATCH_NOTIFICATIONS"
@@ -32,12 +31,8 @@ object AlarmUpdater {
         val alarmMan = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val defineIntent = Intent(context, UpdateService::class.java)
         defineIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-        val operation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val flags = PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
-            PendingIntent.getService(context, 0, defineIntent, flags)
-        } else {
-            PendingIntent.getService(context, 0, defineIntent, PendingIntent.FLAG_NO_CREATE)
-        }
+        val flags = PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        val operation = PendingIntent.getService(context, 0, defineIntent, flags)
         if (operation != null) {
             alarmMan.cancel(operation)
         }
@@ -49,12 +44,8 @@ object AlarmUpdater {
         val alarmMan = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val defineIntent = Intent(context, UpdateService::class.java)
         defineIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-        val operation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            PendingIntent.getService(context, 0, defineIntent, flags)
-        } else {
-            PendingIntent.getService(context, 0, defineIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        }
+        val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        val operation = PendingIntent.getService(context, 0, defineIntent, flags)
         if (operation != null) {
             alarmMan.cancel(operation)
         }
@@ -67,12 +58,8 @@ object AlarmUpdater {
     fun showChronometerNotification(context: Context, startTime: Long) {
         val launcher = Intent(context, MainActivity::class.java)
         launcher.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-        val contentIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val flags = PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
-            PendingIntent.getActivity(context, 0, launcher, flags)
-        } else {
-            PendingIntent.getActivity(context, 0, launcher, PendingIntent.FLAG_ONE_SHOT)
-        }
+        val flags = PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        val contentIntent = PendingIntent.getActivity(context, 0, launcher, flags)
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle(context.getString(R.string.app_name))
             .setWhen(System.currentTimeMillis() - startTime)
@@ -98,11 +85,7 @@ object AlarmUpdater {
             )
             NotificationManagerCompat.from(context).createNotificationChannel(notificationChannel)
         }
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -119,12 +102,8 @@ object AlarmUpdater {
         val alarmMan = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val defineIntent = Intent(context, UpdateService::class.java)
         defineIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-        val operation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val flags = PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
-            PendingIntent.getService(context, 0, defineIntent, flags)
-        } else {
-            PendingIntent.getService(context, 0, defineIntent, PendingIntent.FLAG_NO_CREATE)
-        }
+        val flags = PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        val operation = PendingIntent.getService(context, 0, defineIntent, flags)
         if (operation != null) {
             alarmMan.cancel(operation)
         }
@@ -144,13 +123,8 @@ object AlarmUpdater {
             val launcher = Intent(this, MainActivity::class.java)
             launcher.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             launcher.putExtra(INTENT_EXTRA_LAUNCH_COUNTDOWN, true)
-            val contentIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val flags = PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
-                PendingIntent.getActivity(this, 0, launcher, flags)
-            } else {
-                PendingIntent.getActivity(this, 0, launcher, PendingIntent.FLAG_ONE_SHOT)
-            }
-
+            val flags = PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+            val contentIntent = PendingIntent.getActivity(this, 0, launcher, flags)
             // Set the icon, scrolling text and timestamp
             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.app_name))
@@ -179,11 +153,7 @@ object AlarmUpdater {
                 NotificationManagerCompat.from(this).createNotificationChannel(notificationChannel)
             }
 
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
+            if (ActivityCompat.checkSelfPermission(this,Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding

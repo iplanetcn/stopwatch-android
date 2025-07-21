@@ -25,6 +25,9 @@ import io.github.iplanetcn.app.stopwatch.fragments.CountdownFragment
 import io.github.iplanetcn.app.stopwatch.manager.SoundManager
 import io.github.iplanetcn.app.stopwatch.utils.AlarmUpdater
 import kotlin.math.*
+import androidx.core.content.withStyledAttributes
+import androidx.core.graphics.withRotation
+import androidx.core.graphics.withSave
 
 
 private const val RADIUS_OFFSET_LABEL = 100
@@ -62,9 +65,9 @@ class StopwatchView @JvmOverloads constructor(
 
     init {
         isClickable = true
-        val a = context.obtainStyledAttributes(attrs, R.styleable.StopwatchView)
-        isStopwatch = a.getBoolean(R.styleable.StopwatchView_watchType, false)
-        a.recycle()
+        context.withStyledAttributes(attrs, R.styleable.StopwatchView) {
+            isStopwatch = getBoolean(R.styleable.StopwatchView_watchType, false)
+        }
         updateContentDescription()
         ViewCompat.setAccessibilityDelegate(this, object : AccessibilityDelegateCompat() {
             override fun onInitializeAccessibilityNodeInfo(
@@ -107,10 +110,9 @@ class StopwatchView @JvmOverloads constructor(
     private fun drawHand(canvas: Canvas, path: Path, angle: Float, pivot: PointF) {
 //        paint.color = ContextCompat.getColor(context, R.color.stopwatch_hands_color)
 //        paint.style = Paint.Style.FILL
-        canvas.save()
-        canvas.rotate(angle, pivot.x, pivot.y)
-        canvas.drawPath(path, paint)
-        canvas.restore()
+        canvas.withRotation(angle, pivot.x, pivot.y) {
+            drawPath(path, paint)
+        }
     }
 
     private fun drawHands(canvas: Canvas) {
@@ -167,85 +169,89 @@ class StopwatchView @JvmOverloads constructor(
     }
 
     private fun drawScales(canvas: Canvas) {
-        canvas.save()
-        repeat(240) {
-            val scaleLength: Float = when {
-                it % 20 == 0 -> {
-                    paint.strokeWidth = 6f
-                    paint.color =
-                        ContextCompat.getColor(context, R.color.stopwatch_scales_outer_long_color)
-                    40f
-                }
-                it % 4 == 0 -> {
-                    paint.strokeWidth = 2f
-                    paint.color =
-                        ContextCompat.getColor(context, R.color.stopwatch_scales_outer_short_color)
-                    40f
-                }
-                else -> {
-                    paint.strokeWidth = 1f
-                    paint.color =
-                        ContextCompat.getColor(context, R.color.stopwatch_scales_outer_short_color)
-                    30f
-                }
-            }
-            canvas.drawLine(
-                pivotX,
-                pivotY + largeRadius + 6f.dp,
-                pivotX,
-                pivotY + largeRadius + 6f.dp + scaleLength,
-                paint
-            )
-            canvas.rotate(360 / 240f, pivotX, pivotY)
-        }
-        //Restore the original state
-        canvas.restore()
+        canvas.withSave {
+            repeat(240) {
+                val scaleLength: Float = when {
+                    it % 20 == 0 -> {
+                        paint.strokeWidth = 6f
+                        paint.color =
+                            ContextCompat.getColor(context, R.color.stopwatch_scales_outer_long_color)
+                        40f
+                    }
 
-        canvas.save()
-        paint.color = ContextCompat.getColor(context, R.color.stopwatch_scales_inner_large_color)
-        repeat(200) {
-            val scaleLength: Float = when {
-                it % 10 == 0 -> {
-                    paint.strokeWidth = 2f
-                    30f
-                }
-                it % 2 == 0 -> {
-                    paint.strokeWidth = 2f
-                    20f
-                }
-                else -> {
-                    paint.strokeWidth = 1f
-                    20f
-                }
-            }
-            canvas.drawLine(
-                pivotX,
-                pivotY + largeRadius - 8f.dp,
-                pivotX,
-                pivotY + largeRadius - 8f.dp - scaleLength,
-                paint
-            )
-            canvas.rotate(360 / 200f, pivotX, pivotY)
-        }
-        //Restore the original state
-        canvas.restore()
+                    it % 4 == 0 -> {
+                        paint.strokeWidth = 2f
+                        paint.color =
+                            ContextCompat.getColor(context, R.color.stopwatch_scales_outer_short_color)
+                        40f
+                    }
 
-        canvas.save()
-        repeat(30) {
-            paint.strokeWidth = 2f
-            paint.color = ContextCompat.getColor(context, R.color.stopwatch_dial_small_color)
-            val scaleLength = 20f
-            canvas.drawLine(
-                pivotX,
-                smallPivotY - smallRadius,
-                pivotX,
-                smallPivotY - smallRadius + scaleLength,
-                paint
-            )
-            canvas.rotate(360 / 30f, pivotX, smallPivotY)
+                    else -> {
+                        paint.strokeWidth = 1f
+                        paint.color =
+                            ContextCompat.getColor(context, R.color.stopwatch_scales_outer_short_color)
+                        30f
+                    }
+                }
+                drawLine(
+                    pivotX,
+                    pivotY + largeRadius + 6f.dp,
+                    pivotX,
+                    pivotY + largeRadius + 6f.dp + scaleLength,
+                    paint
+                )
+                rotate(360 / 240f, pivotX, pivotY)
+            }
+            //Restore the original state
         }
-        //Restore the original state
-        canvas.restore()
+
+        canvas.withSave {
+            paint.color = ContextCompat.getColor(context, R.color.stopwatch_scales_inner_large_color)
+            repeat(200) {
+                val scaleLength: Float = when {
+                    it % 10 == 0 -> {
+                        paint.strokeWidth = 2f
+                        30f
+                    }
+
+                    it % 2 == 0 -> {
+                        paint.strokeWidth = 2f
+                        20f
+                    }
+
+                    else -> {
+                        paint.strokeWidth = 1f
+                        20f
+                    }
+                }
+                drawLine(
+                    pivotX,
+                    pivotY + largeRadius - 8f.dp,
+                    pivotX,
+                    pivotY + largeRadius - 8f.dp - scaleLength,
+                    paint
+                )
+                rotate(360 / 200f, pivotX, pivotY)
+            }
+            //Restore the original state
+        }
+
+        canvas.withSave {
+            repeat(30) {
+                paint.strokeWidth = 2f
+                paint.color = ContextCompat.getColor(context, R.color.stopwatch_dial_small_color)
+                val scaleLength = 20f
+                drawLine(
+                    pivotX,
+                    smallPivotY - smallRadius,
+                    pivotX,
+                    smallPivotY - smallRadius + scaleLength,
+                    paint
+                )
+                rotate(360 / 30f, pivotX, smallPivotY)
+            }
+            //Restore the original state
+        }
 
     }
 

@@ -7,7 +7,6 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.drawable.AnimationDrawable
 import android.media.AudioManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
@@ -26,12 +25,13 @@ import io.github.iplanetcn.app.stopwatch.utils.AlarmUpdater
 import io.github.iplanetcn.app.stopwatch.utils.LapTimeRecorder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
+import androidx.core.content.edit
+import androidx.core.net.toUri
 
 class MainActivity : BaseActivity() {
     private lateinit var firebaseAnalytics: FirebaseAnalytics
@@ -133,18 +133,18 @@ class MainActivity : BaseActivity() {
         super.onPause()
         mWakeLock!!.release()
         val settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        val editor = settings.edit()
-        editor.putBoolean(KEY_AUDIO_STATE, SoundManager.isAudioOn)
+        settings.edit {
+            putBoolean(KEY_AUDIO_STATE, SoundManager.isAudioOn)
 
-        //if we're quitting with the countdown running and not the stopwatch then jump to countdown on relaunch
-        if (mCountdownFragment != null && mCountdownFragment!!.isRunning &&
-            mStopwatchFragment != null && !mStopwatchFragment!!.isRunning
-        ) {
-            editor.putInt(KEY_JUMP_TO_PAGE, 2)
-        } else {
-            editor.putInt(KEY_JUMP_TO_PAGE, -1)
+            //if we're quitting with the countdown running and not the stopwatch then jump to countdown on relaunch
+            if (mCountdownFragment != null && mCountdownFragment!!.isRunning &&
+                mStopwatchFragment != null && !mStopwatchFragment!!.isRunning
+            ) {
+                putInt(KEY_JUMP_TO_PAGE, 2)
+            } else {
+                putInt(KEY_JUMP_TO_PAGE, -1)
+            }
         }
-        editor.apply()
         LapTimeRecorder.saveTimes(this)
     }
 
@@ -220,7 +220,7 @@ class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_rate_app) {
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(getString(R.string.play_store_uri))
+            intent.data = getString(R.string.play_store_uri).toUri()
             startActivity(intent)
         } else if (item.itemId == R.id.menu_clear_laps) {
             LapTimeRecorder.reset(this)
@@ -234,7 +234,7 @@ class MainActivity : BaseActivity() {
             updateAudioMenuItemIcon(item)
         } else if (item.itemId == R.id.menu_settings) {
             val intent = Intent(this, SettingsActivity::class.java)
-            intent.data = Uri.parse(getString(R.string.play_store_uri))
+            intent.data = getString(R.string.play_store_uri).toUri()
             startActivity(intent)
         }
         return true
