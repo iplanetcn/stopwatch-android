@@ -1,0 +1,25 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+  <group
+      android:name="stopwatch"
+      android:scaleX="0.13078125"
+      android:scaleY="0.13078125"
+      android:translateX="26"
+      android:translateY="20.52">
+    <path
+        android:pathData="M258.214164,-2.84217094e-14 L258.214164,59.1918438 C291.085963,65.3219491 321.362732,78.8287605 347.261427,97.9292344 L380.039729,63.6690901 L436,120.489618 L401.12501,155.166394 C423.18927,189.244141 436,229.871194 436,273.490355 C436,393.88843 338.398075,491.490355 218,491.490355 C97.6019245,491.490355 0,393.88843 0,273.490355 C0,229.441897 13.0641366,188.444731 35.5291425,154.162125 L0,120.489618 L57.0892047,63.6690901 L91.9025057,95.6391421 C117.441825,77.4988213 147.057122,64.7216749 179.106274,58.9498241 L179.106274,-2.84217094e-14 L258.214164,-2.84217094e-14 Z M218,74.4903546 C107.54305,74.4903546 18,164.033405 18,274.490355 C18,384.947305 107.54305,474.490355 218,474.490355 C328.45695,474.490355 418,384.947305 418,274.490355 C418,164.033405 328.45695,74.4903546 218,74.4903546 Z"
+        android:strokeWidth="1"
+        android:fillColor="#D8D8D8"
+        android:fillType="evenOdd"
+        android:strokeColor="#00000000"/>
+    <path
+        android:pathData="M248.017,281.205l114.551,-114.551l7.778,7.778l-114.551,114.551z"
+        android:strokeWidth="1"
+        android:fillColor="#D8D8D8"
+        android:strokeColor="#00000000"
+        android:fillType="evenOdd"/>
+  </group>
+</vector>
