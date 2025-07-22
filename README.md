@@ -13,11 +13,11 @@ Stopwatch is an application with stop-watch & countdown-watch.
 ## Todo List
 
 - Theme
-  - [ ] Support Dark Mode
+  - [x] Support Dark Mode
 - Multiple Language Support
   - [x] English
   - [x] Chinese Simplify
-  - [ ] Chinese Traditional
+  - [x] Chinese Traditional
   - [ ] French
   - [ ] Spanish
   - [ ] Japanese

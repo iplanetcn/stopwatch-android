@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">秒錶</string>
+    <string name="timer_title">設定倒數計時</string>
+    <string name="timer_start">確定</string>
+    <string name="timer_cancel">取消</string>
+    <string name="delete">刪除</string>
+    <string name="stopwatch">秒錶</string>
+    <string name="countdown">倒數計時</string>
+    <string name="lap_times">記錄</string>
+    <string name="hours">小時</string>
+    <string name="minutes">分鐘</string>
+    <string name="seconds">秒</string>
+    <string name="countdown_complete">倒數計時結束！</string>
+    <string name="rate_app">評價應用程式</string>
+    <string name="settings">設定</string>
+    <string name="clear_all_laps">清除所有計時記錄</string>
+    <string name="start">開始</string>
+    <string name="pause">暫停</string>
+    <string name="reset">重設</string>
+    <string name="lap">計時</string>
+    <string name="content_desc_start_sw">開始/暫停秒錶</string>
+    <string name="content_desc_start_cd">開始/暫停倒數計時</string>
+    <string name="content_desc_tab_layout">分頁佈局</string>
+    <string name="content_desc_reset">重設</string>
+    <string name="content_desc_lap_time">儲存計時</string>
+    <string name="settings_settings">設定</string>
+    <string name="settings_about">關於</string>
+    <string name="settings_libraries">第三方庫</string>
+    <string name="settings_sound_secs">秒錶聲音</string>
+    <string name="settings_vibrate">震動</string>
+    <string name="settings_endless_alert">延長鬧鐘</string>
+    <string name="settings_animations">指針動畫</string>
+    <string name="settings_libraries_text">無</string>
+    <string name="reset_time">重設時間</string>
+    <string name="audio_toggle">聲音開關</string>
+</resources>

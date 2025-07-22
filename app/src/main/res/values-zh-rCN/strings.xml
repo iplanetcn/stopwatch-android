@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Stopwatch</string>
+    <string name="app_name">秒表</string>
     <string name="timer_title">设置倒计时</string>
     <string name="timer_start">确定</string>
     <string name="timer_cancel">取消</string>
