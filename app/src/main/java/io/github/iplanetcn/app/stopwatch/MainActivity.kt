@@ -26,12 +26,12 @@ import io.github.iplanetcn.app.stopwatch.utils.LapTimeRecorder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import androidx.core.content.edit
 import androidx.core.net.toUri
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.analytics
 
 class MainActivity : BaseActivity() {
     private lateinit var firebaseAnalytics: FirebaseAnalytics
