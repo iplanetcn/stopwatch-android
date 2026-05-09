@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.google.services)
@@ -10,8 +12,8 @@ android {
         applicationId = Config.APP_ID
         minSdk = Config.MIN_SDK
         targetSdk = Config.TARGET_SDK
-        versionCode = 20250721
-        versionName = "1.1"
+        versionCode = Config.VERSION_CODE
+        versionName = Config.VERSION_NAME
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -36,6 +38,17 @@ android {
         shaders = false
         buildConfig = true
         viewBinding = true
+    }
+}
+
+androidComponents {
+    onVariants { variant ->
+        variant.outputs.forEach { output ->
+            val versionName = output.versionName.orNull ?: Config.VERSION_NAME
+            val apkName = "stopwatch-$versionName-${variant.buildType}.apk"
+            logger.lifecycle("APK output for ${variant.name}: $apkName")
+            output.outputFileName.set(apkName)
+        }
     }
 }
 

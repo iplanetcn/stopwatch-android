@@ -1,5 +1,4 @@
-import org.gradle.internal.impldep.org.joda.time.LocalDate
-import org.gradle.internal.impldep.org.joda.time.format.DateTimeFormat
+import java.util.Calendar
 
 /**
  * Base/Base: 基础版本。
@@ -22,9 +21,9 @@ object Config {
     const val MINOR = 1
     const val PATCH = 0
     const val ROUND = 1
-    val PHASE = Phase.Alpha
+    val PHASE = Phase.GA
 
-    val VERSION_CODE = getVersionCode()
+    val VERSION_CODE = getDate()
     val VERSION_NAME = getVersionName()
 
     const val COMPILE_SDK = 36
@@ -33,23 +32,18 @@ object Config {
 
     const val APP_ID = "io.github.iplanetcn.app.stopwatch"
 
-    private fun getVersionName(): String{
-        return when(PHASE) {
+    private fun getVersionName(): String {
+        return when (PHASE) {
             Phase.GA -> "$MAJOR.$MINOR.$PATCH"
-            else -> "$MAJOR.$MINOR.$PATCH-${PHASE.label}.$ROUND"
+            Phase.Alpha, Phase.Beta, Phase.RC -> "$MAJOR.$MINOR.$PATCH-${PHASE.label}.${ROUND}"
         }
     }
 
-    private fun getVersionCode(): Int {
-        return when(PHASE) {
-            Phase.GA -> (MAJOR * 100 + MINOR) * 100 + PATCH
-            else -> ((MAJOR * 100 + MINOR) * 100 + PATCH) * 100 + ROUND
-        }
-    }
-
-    private fun getDate(): String {
-        val date = LocalDate.now()
-        val fmt = DateTimeFormat.forPattern("yyyyMMdd")
-        return fmt.print(date)
+    private fun getDate(): Int {
+        val c = Calendar.getInstance()
+        val y = c.get(Calendar.YEAR)
+        val m = c.get(Calendar.MONTH) + 1  // 0-based
+        val d = c.get(Calendar.DAY_OF_MONTH)
+        return y * 10000 + m * 100 + d     // e.g. 20260509
     }
 }
